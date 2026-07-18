@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>GIGGLEDOOM 👹</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👹</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="home-inner">
+    <div class="logo">
+      <div class="logo-monster" id="logoMonster">👹</div>
+      <h1>GIGGLE<span>DOOM</span></h1>
+      <p class="tagline">hide and seek, except laughing is fatal. rated R. your phone will yell profanity.</p>
+    </div>
+    <div id="homeLevel" class="level-chip">LVL 1 · 🪙 0</div>
+    <input id="nameInput" maxlength="14" placeholder="YOUR NAME, COWARD" autocomplete="off">
+    <button id="btnCreate" class="big-btn">🏚️ CREATE A LOBBY</button>
+    <div class="join-row">
+      <input id="codeInput" maxlength="4" placeholder="CODE" autocomplete="off">
+      <button id="btnJoin" class="big-btn slim">JOIN</button>
+    </div>
+    <div class="join-row">
+      <button id="btnLockerHome" class="big-btn slim" style="flex:1">🎽 LOCKER</button>
+      <button id="btnShopHome" class="big-btn slim" style="flex:1">🛍️ STORE</button>
+    </div>
+    <p class="fine">turn your sound ON and allow the mic. the mic is the whole point. up to 16 players.</p>
+  </div>
+</div>
+
+<!-- LOBBY -->
+<div id="lobby" class="screen">
+  <div class="lobby-inner">
+    <div class="lobby-head">
+      <div>
+        <h2>LOBBY <span id="lobbyCode" class="code-chip">----</span></h2>
+        <p class="fine">send friends this link + code (or just the link with ?room=CODE)</p>
+      </div>
+      <button id="btnShare" class="mini-btn">📤 COPY INVITE</button>
+    </div>
+
+    <h3>PICK YOUR IDIOT</h3>
+    <div id="charGrid" class="char-grid"></div>
+
+    <div class="settings-card" id="hostSettings">
+      <h3>GAME MODE <span class="fine">(host only)</span></h3>
+      <div id="modeGrid" class="mode-grid"></div>
+      <label class="afterdark-row">
+        <input type="checkbox" id="afterDarkToggle">
+        <span>🔞 <b>AFTER DARK</b>: the base game already curses like a sailor. This makes it filthy. Adults only.</span>
+      </label>
+    </div>
+
+    <h3>WHO'S HERE</h3>
+    <div id="playerList" class="player-list"></div>
+
+    <div class="lobby-actions">
+      <button id="btnLocker" class="mini-btn">🎽 LOCKER</button>
+      <button id="btnDrip" class="mini-btn">🛍️ DRIP STORE</button>
+      <button id="btnStart" class="big-btn">🩸 START THE HUNT</button>
+    </div>
+    <div id="lobbyLog" class="log"></div>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen">
+  <canvas id="cv"></canvas>
+  <div id="hud">
+    <div id="topBar">
+      <span id="hudPhase">HIDE!</span>
+      <span id="hudTimer">0:00</span>
+      <span id="hudMonster"></span>
+    </div>
+    <div id="micMeter"><div id="micFill"></div><span id="micLabel">🎤</span></div>
+    <div id="taskBar" class="hidden"><span id="taskText"></span><span id="taskProg"></span></div>
+    <div id="boostRow" class="hidden">
+      <span id="juiceChip">⚡0</span>
+      <button id="boostZoom" class="boost-btn">🏃</button>
+      <button id="boostVanish" class="boost-btn">🫥</button>
+      <button id="boostMute" class="boost-btn">🤐</button>
+    </div>
+    <div id="feed"></div>
+    <div id="bubble" class="hidden"></div>
+    <div id="joyZone"></div>
+    <div id="lookZone"></div>
+    <div id="reticle" class="hidden">+</div>
+    <div id="btnCol">
+      <button id="btnAction" class="game-btn hidden">🫥 HIDE</button>
+      <button id="btnAbility" class="game-btn hidden">🐿️ DECOY</button>
+      <button id="btnPerk" class="game-btn hidden">🎁 PERK</button>
+      <button id="btnCheck" class="game-btn seeker hidden">👁️ CHECK</button>
+      <button id="btnSprint" class="game-btn seeker hidden">💨 SPRINT</button>
+      <button id="btnFlash" class="game-btn seeker hidden">🔦 FLASHLIGHT</button>
+      <button id="btnLurk" class="game-btn seeker hidden">🌫️ LURK</button>
+      <button id="btnDisguise" class="game-btn seeker hidden">🎭 DISGUISE</button>
+      <button id="btnHaunt" class="game-btn ghost hidden">👻 HAUNT</button>
+    </div>
+    <div id="seekerBlind" class="hidden">
+      <div class="blind-inner">
+        <div class="blind-monster">🙈</div>
+        <h2>NO PEEKING</h2>
+        <p id="blindCount">You are counting. Loudly. Menacingly.</p>
+      </div>
+    </div>
+    <div id="smokeOverlay" class="hidden"></div>
+    <div id="caughtBanner" class="hidden"></div>
+  </div>
+</div>
+
+<!-- ROUND END -->
+<div id="end" class="screen">
+  <div class="end-inner">
+    <h2 id="endTitle">ROUND OVER</h2>
+    <div id="ranking"></div>
+    <div id="perkPick" class="hidden">
+      <h3>🏆 YOU WON. PICK A CHEAT PERK FOR NEXT ROUND:</h3>
+      <div id="perkGrid"></div>
+    </div>
+    <div id="perkWait" class="hidden fine"></div>
+    <div class="lobby-actions">
+      <button id="btnDrip2" class="mini-btn">🛍️ DRIP STORE</button>
+      <button id="btnNext" class="big-btn hidden">▶️ NEXT ROUND</button>
+    </div>
+    <p class="fine" id="autoNext"></p>
+  </div>
+</div>
+
+<!-- DRIP STORE -->
+<div id="shop" class="overlay hidden">
+  <div class="shop-inner">
+    <div class="shop-head">
+      <h2>🛍️ DRIP STORE</h2>
+      <span id="coinCount" class="coin-chip">🪙 0</span>
+      <button id="btnCloseShop" class="mini-btn">✖</button>
+    </div>
+    <p class="fine">win rounds and do tasks, earn coins, buy hats. the hats do nothing. the hats are everything.</p>
+    <div id="shopGrid" class="shop-grid"></div>
+    <h3>💪 PERMANENT UPGRADES <span class="fine">(these actually do something)</span></h3>
+    <div id="upGrid" class="up-grid"></div>
+  </div>
+</div>
+
+<!-- LOCKER -->
+<div id="locker" class="overlay hidden">
+  <div class="shop-inner">
+    <div class="shop-head">
+      <h2>🎽 LOCKER</h2>
+      <span id="lockerLevel" class="level-chip">LVL 1</span>
+      <button id="btnCloseLocker" class="mini-btn">✖</button>
+    </div>
+    <p class="fine">play a character to level it up. leveling unlocks skins, auras, and props for THAT character. mix and match. the props do nothing. wield them anyway.</p>
+    <div id="lockerTabs" class="locker-tabs"></div>
+    <div id="lockerCard" class="locker-card"></div>
+    <label class="afterdark-row" id="adultConfirmRow">
+      <input type="checkbox" id="adultConfirm">
+      <span>🔞 I am 18+ and want to see the cursed cosmetics (wands, and worse).</span>
+    </label>
+    <h3>👕 SKINS</h3>
+    <div id="skinGrid" class="cos-grid"></div>
+    <h3>✋ PROPS</h3>
+    <div id="accGrid" class="cos-grid"></div>
+    <h3>✨ AURAS</h3>
+    <div id="auraGrid" class="cos-grid"></div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="client.js"></script>
+</body>
+</html>
