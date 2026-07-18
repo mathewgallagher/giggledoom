@@ -83,24 +83,54 @@ BACKYARD (bush, murder tent, grill, sunflowers). Small spots are LIL GREMLIN onl
   chaos, obviously), a cursed painting, a haunted jukebox, a garlic shrine, an ancient phone.
   First find of each pays coins.
 
-## The "make you crack" comedy
+## The world (first person)
 
-The whole point is getting someone to laugh and blow their cover. On top of the roaming
-monster taunts and gamertag quips, random chaos events now fire off cursed bodily noises
-(fart, queef, moan, burp) that play from a random hider's location and out them to everyone,
-plus unhinged-grandpa non-sequiturs and a lot of raunchy oversharing. It's crude on purpose,
-for a room full of consenting adults.
+You move through a real 7-room house in first person: a textured floor that slides under you
+as you walk (so you can always tell you're moving), walls colored per room (wood kitchen,
+purple living room, teal bathroom, etc.) with baseboards and crown molding, and furniture in
+every room so nothing feels empty. A tag in the top-left always shows which room you're in and
+which way you're facing, and the minimap shows a facing wedge.
 
-Note: the humor is vulgar and gross-out, but it does not include racist or homophobic
+## Voice, the mic, and the noise rules
+
+- **Proximity voice chat is built in** (R.E.P.O. style). Your live voice comes out of your
+  character: friends near you hear you clearly, far away you fade out, and through a wall you
+  sound muffled. The monster hunts by listening for whispers and giggles. Voice is peer-to-peer
+  between the players in your room only — never recorded, never stored, never touches the server.
+  Dead players' voices can't be heard by the living (ghosts hear everyone).
+- **The mic is mandatory the entire time.** A full-screen "MIC REQUIRED" gate blocks play until
+  it's allowed.
+- **Only laughing gets you caught.** Talking and whispering carry as voice (so the monster can
+  hear you), but the game itself only punishes an actual laugh near the monster.
+- **Your character's face is live**: its mouth flaps when you talk and flies open with tears
+  when you laugh, visible to anyone looking at you.
+- Note: voice uses direct peer-to-peer connections (STUN). On some very restrictive networks a
+  pair of players may fail to connect voice; the game still works, they just won't hear each
+  other. Keep a group call as backup for that rare case.
+
+## The comedy: room bots
+
+Instead of a chaotic wall of voices, each room has ONE resident "bot" — a floating, glowing,
+horned creep (the GREASE GOBLIN in the kitchen, BASEMENT BILL downstairs, THE THING UNDER in
+the bedroom, etc.). You only ever hear the bot in the room you're standing in, so it's never
+overwhelming. They talk to you (and sometimes name your friends) with dark, scary, deeply
+out-of-pocket lines designed to make you crack. The monster still throws the occasional global
+taunt, and cursed bodily-noise events (fart/queef/moan/burp) still fire, but less often.
+
+Note: it's vulgar, gross-out, and genuinely edgy, but it does not include racist or homophobic
 material or slurs — names spoken aloud are still filtered for those.
 
 ## Character leveling + the LOCKER
 
 - Every character (ZOOMY / BIG SLURP / LIL GREMLIN / WALLFISH) earns its own XP whenever you
   play it. Surviving and placing top 3 pay bonus XP.
-- Leveling a character unlocks, for THAT character: alternate **skins** (a level-5 ZOOMY can
-  play as a kangaroo or full demon), held **props** (magic wand, tiny sword, flames), and
-  **auras** (gold, toxic, royal, fire, rainbow particle trails). Mix and match in the LOCKER.
+- The four characters are hand-drawn, animated creatures (not emoji): ZOOMY the twitchy
+  antenna speedster in clown sneakers, BIG SLURP the smug pink chonk, LIL GREMLIN the
+  goblin, and WALLFISH the wall-crawling squid. They walk, bob, and blink.
+- Leveling a character unlocks, for THAT character: **skins** (color recolors like Toxic,
+  Bubblegum, Gold Rush, Demon, Void, Ghost, Shadow), held **props** (magic wand, tiny sword,
+  flames), and **auras** (gold, toxic, royal, fire, rainbow particle trails). Mix and match
+  in the LOCKER, which shows a live animated preview of your character.
 - 18+ cosmetics (wands and worse) are hidden behind a "I am 18+" toggle in the locker.
 - Your total XP is your ACCOUNT LEVEL, which unlocks the seeker's toys.
 

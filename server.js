@@ -48,6 +48,12 @@ const TAUNTS = [
   'I HEARD A MOAN. WAS THAT FEAR OR FUN. EITHER WAY, MINE.',
   'CALL ME AN OVEN BECAUSE I AM PREHEATED AND YOU ARE A HOT POCKET.',
   'CLENCH ALL YOU WANT. IT ONLY SEASONS THE MEAT.',
+  'I ALREADY KNOW WHICH ONE OF YOU CRIES FIRST. IT IS YOU. OBVIOUSLY YOU.',
+  'THERE IS NO DOOR OUT. THERE NEVER WAS. WELCOME HOME.',
+  'I WILL FIND YOU BY SMELL. AND FRANKLY, EASILY.',
+  'DO NOT RUN TOWARD THE LIGHT. THE LIGHT IS ALSO ME.',
+  'I HAVE SO MANY TEETH AND SO FEW MORALS.',
+  'YOUR BONES WOULD MAKE A LOVELY WIND CHIME. HOLD STILL.',
 ];
 const TAUNTS_DARK = [
   'I HAVE SEEN YOUR BROWSER HISTORY. THE BUSH WILL NOT SAVE YOU.',
@@ -368,20 +374,14 @@ function tick(room) {
     }
   } else if (room.phase === 'seek') {
     const n = room.tickN;
-    if (n % 12 === 0) io.to(room.code).emit('roar');
-    if (n % 13 === 6) {
+    if (n % 16 === 0) io.to(room.code).emit('roar');
+    // the monster speaks occasionally (ONE global voice). room bots (client-side) carry the
+    // rest of the comedy, so we no longer spam a spoken line per hider.
+    if (n % 19 === 7) {
       const pool = room.afterDark ? TAUNTS_DARK.concat(TAUNTS) : TAUNTS;
       io.to(room.code).emit('taunt', { text: rand(pool) });
     }
-    if (n % 8 === 3) {
-      const hiders = alive(room);
-      if (hiders.length) {
-        const p = rand(hiders);
-        io.to(room.code).emit('quip', { id: p.id, name: p.name, text: resolveQuip(room, p) });
-        io.to(room.code).emit('ping', { x: p.x, y: p.y, kind: 'quip', id: p.id });
-      }
-    }
-    if (n % 30 === 17) fireEvent(room);
+    if (n % 42 === 20) fireEvent(room);
     if (room.timeLeft <= 0) {
       msg(room, 'TIME! The survivors emerge, smug and unbitten.');
       endRound(room);
@@ -475,7 +475,7 @@ io.on('connection', socket => {
     me.spot = d.spot || null; me.camo = !!d.camo;
     socket.volatile.to(room.code).emit('pos', {
       id: me.id, x: me.x, y: me.y, spot: me.spot, camo: me.camo, vz: !!d.vz,
-      dg: d.dg || null, dgn: (d.dgn || '').slice(0, 14), lurk: !!d.lurk, caught: me.caught,
+      dg: d.dg || null, dgn: (d.dgn || '').slice(0, 14), lurk: !!d.lurk, tk: Math.min(3, Math.max(0, +d.tk || 0)), caught: me.caught,
     });
   });
 
@@ -522,6 +522,13 @@ io.on('connection', socket => {
   socket.on('ability', payload => {
     if (!me || !room || room.phase !== 'seek') return;
     io.to(room.code).emit('ability', { id: me.id, ...payload });
+  });
+
+  // WebRTC signaling relay for proximity voice: forwards offers/answers/ICE between roommates.
+  socket.on('rtc', ({ to, data }) => {
+    if (!me || !room || !to || !data) return;
+    if (!room.players.has(to)) return;
+    io.to(to).emit('rtc', { from: me.id, data });
   });
 
   socket.on('task:done', ({ seq }) => {
