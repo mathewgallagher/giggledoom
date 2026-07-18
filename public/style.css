@@ -17,6 +17,7 @@ button { font-family: inherit; cursor: pointer; }
 #home { background: radial-gradient(ellipse at 50% 20%, #2c1250 0%, #12081f 70%); }
 .home-inner { max-width: 420px; margin: 0 auto; padding: 8vh 24px 40px; display: flex; flex-direction: column; gap: 14px; text-align: center; }
 .logo-monster { font-size: 84px; animation: wobble 1.6s ease-in-out infinite; filter: drop-shadow(0 0 24px #ff2fb9); }
+canvas.logo-monster { width: 120px; height: 100px; margin: 0 auto; display: block; }
 @keyframes wobble { 0%,100% { transform: rotate(-8deg) scale(1); } 50% { transform: rotate(8deg) scale(1.12); } }
 h1 { font-size: 44px; letter-spacing: 2px; font-weight: 900; color: #ffe14d; text-shadow: 3px 3px 0 #ff2fb9, 6px 6px 0 #4a0d8f; }
 h1 span { color: #ff5470; }
@@ -55,6 +56,9 @@ h3 { font-size: 14px; font-weight: 900; letter-spacing: 1px; opacity: 0.9; margi
 }
 .char-card.sel { border-color: #ffe14d; background: #35205c; }
 .char-card .ce { font-size: 38px; }
+.char-card .char-canvas { width: 92px; height: 92px; display: block; margin: 0 auto 2px; }
+.locker-card .lc-canvas { width: 84px; height: 84px; }
+.locker-tab .lt-canvas { width: 40px; height: 40px; display: block; margin: 0 auto; }
 .char-card b { display: block; font-size: 15px; margin: 4px 0 2px; }
 .char-card small { font-size: 11px; opacity: 0.75; line-height: 1.35; display: block; }
 .char-card .stat { font-size: 10px; margin-top: 6px; display: block; color: #ffe14d; font-weight: 800; }
@@ -89,6 +93,12 @@ h3 { font-size: 14px; font-weight: 900; letter-spacing: 1px; opacity: 0.9; margi
 }
 #hudTimer { color: #ffe14d; }
 #hudMonster { color: #ff5470; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; }
+#roomTag {
+  position: absolute; top: calc(env(safe-area-inset-top, 8px) + 8px); left: 12px;
+  background: rgba(18, 8, 31, 0.82); border: 2px solid #6d3bbf; border-radius: 12px;
+  padding: 6px 12px; font-size: 13px; font-weight: 900; letter-spacing: 0.5px;
+}
+#compass { color: #ffe14d; }
 #micMeter {
   position: absolute; left: 12px; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
   width: 130px; height: 26px; background: rgba(0,0,0,0.6); border: 2px solid #6d3bbf;
@@ -131,6 +141,11 @@ h3 { font-size: 14px; font-weight: 900; letter-spacing: 1px; opacity: 0.9; margi
 #seekerBlind h2 { font-size: 36px; color: #ff5470; }
 #seekerBlind p { margin-top: 8px; opacity: 0.7; }
 #smokeOverlay { position: absolute; inset: 0; background: radial-gradient(circle, rgba(200,200,210,0.97), rgba(160,160,175,0.99)); }
+#micGate { position: absolute; inset: 0; background: rgba(5,2,10,0.96); display: flex; align-items: center; justify-content: center; pointer-events: auto; z-index: 40; }
+.gate-inner { max-width: 360px; text-align: center; padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.gate-mic { font-size: 72px; animation: wobble 1.6s ease-in-out infinite; }
+#micGate h2 { font-size: 30px; color: #ff5470; }
+#micGate p { font-size: 14px; opacity: 0.85; line-height: 1.5; }
 #caughtBanner {
   position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) rotate(-4deg);
   font-size: 34px; font-weight: 900; color: #ff5470; text-shadow: 3px 3px 0 #000;

@@ -14,7 +14,7 @@
 <div id="home" class="screen active">
   <div class="home-inner">
     <div class="logo">
-      <div class="logo-monster" id="logoMonster">👹</div>
+      <canvas class="logo-monster" id="logoCanvas" width="180" height="150"></canvas>
       <h1>GIGGLE<span>DOOM</span></h1>
       <p class="tagline">hide and seek, except laughing is fatal. rated R. your phone will yell profanity.</p>
     </div>
@@ -77,6 +77,7 @@
       <span id="hudTimer">0:00</span>
       <span id="hudMonster"></span>
     </div>
+    <div id="roomTag">📍 <span id="roomName">—</span> <span id="compass">·</span></div>
     <div id="micMeter"><div id="micFill"></div><span id="micLabel">🎤</span></div>
     <div id="taskBar" class="hidden"><span id="taskText"></span><span id="taskProg"></span></div>
     <div id="boostRow" class="hidden">
@@ -106,6 +107,15 @@
         <div class="blind-monster">🙈</div>
         <h2>NO PEEKING</h2>
         <p id="blindCount">You are counting. Loudly. Menacingly.</p>
+      </div>
+    </div>
+    <div id="micGate" class="hidden">
+      <div class="gate-inner">
+        <div class="gate-mic">🎤</div>
+        <h2>MIC REQUIRED</h2>
+        <p>Your live voice is the game: players near you hear you talk (quieter with distance, muffled through walls), and laughing is what gets you caught.</p>
+        <button id="btnEnableMic" class="big-btn">ALLOW MICROPHONE</button>
+        <p class="fine">voice goes directly to the other players in your room. nothing is recorded or stored.</p>
       </div>
     </div>
     <div id="smokeOverlay" class="hidden"></div>
@@ -171,6 +181,7 @@
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
+<script src="art.js"></script>
 <script src="client.js"></script>
 </body>
 </html>

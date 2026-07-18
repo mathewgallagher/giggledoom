@@ -17,6 +17,8 @@ const CHARS = {
               stat: 'SPEED 2/5 · STEALTH 5/5 · hold still on a wall = near invisible' },
 };
 const SEEKER = { speed: 3.6, size: 46 };
+// base body colours for the hand-drawn creatures (skins recolour these)
+const CHAR_COL = { zoomy: '#37d6c6', slurp: '#ff93b0', gremlin: '#79d24d', wallfish: '#a06bff' };
 
 // THE HOUSE. 7 rooms, 28 hiding spots, doors included free of charge.
 const WORLD = { w: 2600, h: 1800 };
@@ -35,14 +37,25 @@ const WALLS = [
   { x: 1500, y: 880, w: 30, h: 320 }, { x: 1500, y: 1370, w: 30, h: 400 },
   { x: 2000, y: 880, w: 30, h: 220 }, { x: 2000, y: 1270, w: 30, h: 500 },
 ];
+// short = compass tag. wall/floor/ceil = per-room colours so each room reads distinct in first person.
 const ROOMS = [
-  { name: 'THE KITCHEN',                   x: 30,   y: 30,  w: 800, h: 820, tint: '#1a1330' },
-  { name: 'THE LIVING ROOM',               x: 860,  y: 30,  w: 910, h: 820, tint: '#191026' },
-  { name: 'THE BEDROOM (LOCK THE DOOR)',   x: 1800, y: 30,  w: 770, h: 820, tint: '#1c0f2e' },
-  { name: "THE GARAGE (DAD'S LAIR)",       x: 30,   y: 880, w: 800, h: 890, tint: '#141122' },
-  { name: 'THE BASEMENT (SUS)',            x: 860,  y: 880, w: 640, h: 890, tint: '#120c1e' },
-  { name: 'THE BATHROOM (COURTESY FLUSH)', x: 1530, y: 880, w: 470, h: 890, tint: '#14162c' },
-  { name: 'THE BACKYARD (HOA APPROVED)',   x: 2030, y: 880, w: 540, h: 890, tint: '#12201a' },
+  { name: 'THE KITCHEN',                   short: 'KITCHEN',  x: 30,   y: 30,  w: 800, h: 820, tint: '#241a1a', wall: '#6e5138', floor: '#2b211a', ceil: '#171012' },
+  { name: 'THE LIVING ROOM',               short: 'LIVING',   x: 860,  y: 30,  w: 910, h: 820, tint: '#20182c', wall: '#6a4a86', floor: '#241a30', ceil: '#140f1c' },
+  { name: 'THE BEDROOM (LOCK THE DOOR)',   short: 'BEDROOM',  x: 1800, y: 30,  w: 770, h: 820, tint: '#2a1526', wall: '#9c4f7a', floor: '#2c1826', ceil: '#180d16' },
+  { name: "THE GARAGE (DAD'S LAIR)",       short: 'GARAGE',   x: 30,   y: 880, w: 800, h: 890, tint: '#16181e', wall: '#465066', floor: '#1c2028', ceil: '#0e1014' },
+  { name: 'THE BASEMENT (SUS)',            x: 860,  y: 880, w: 640, h: 890, short: 'BASEMENT', tint: '#141018', wall: '#3d3550', floor: '#17131e', ceil: '#0b090f' },
+  { name: 'THE BATHROOM (COURTESY FLUSH)', short: 'BATHROOM', x: 1530, y: 880, w: 470, h: 890, tint: '#141e26', wall: '#3f7f96', floor: '#182630', ceil: '#0c161c' },
+  { name: 'THE BACKYARD (HOA APPROVED)',   short: 'BACKYARD', x: 2030, y: 880, w: 540, h: 890, tint: '#14261a', wall: '#3c6b45', floor: '#16281c', ceil: '#0a1810' },
+];
+// decorative (non-interactive) props to furnish rooms so they don't feel empty.
+const DECOR = [
+  { x: 400, y: 250, e: '🍳', s: 62 }, { x: 300, y: 500, e: '🔪', s: 50 }, { x: 720, y: 430, e: '☕', s: 46 },
+  { x: 1180, y: 300, e: '🪑', s: 66 }, { x: 1450, y: 520, e: '🖼️', s: 58 }, { x: 970, y: 480, e: '💡', s: 54 }, { x: 1300, y: 700, e: '🪴', s: 60 },
+  { x: 2100, y: 300, e: '🪞', s: 62 }, { x: 2350, y: 520, e: '🧴', s: 46 }, { x: 2000, y: 480, e: '🕯️', s: 50 },
+  { x: 300, y: 1200, e: '🛢️', s: 60 }, { x: 500, y: 1450, e: '🔧', s: 46 }, { x: 720, y: 1300, e: '🪜', s: 66 },
+  { x: 1000, y: 1250, e: '🕯️', s: 48 }, { x: 1350, y: 1450, e: '🕸️', s: 54 }, { x: 1180, y: 1550, e: '⚰️', s: 70 },
+  { x: 1620, y: 1250, e: '🪥', s: 44 }, { x: 1850, y: 1450, e: '🧼', s: 44 }, { x: 1780, y: 1300, e: '🪒', s: 42 },
+  { x: 2150, y: 1200, e: '🌷', s: 52 }, { x: 2450, y: 1450, e: '🪴', s: 60 }, { x: 2250, y: 1550, e: '🦩', s: 66 },
 ];
 // cap: 2 = two friends can cram in together (hide + try not to laugh, catch = both busted)
 // secret: true = hidden until you wander close enough to discover it
@@ -116,13 +129,20 @@ const UPS = [
   { id: 'greed', e: '🤑', name: 'CAPITALISM', desc: '+1 bonus coin on every task', cost: [20] },
 ];
 
-// Per-character skin unlocks (unlock = that character's level). lvl 0 = the default look.
-const CHAR_SKINS = {
-  zoomy:    [{e:'🐇',n:'CLASSIC',lvl:0},{e:'🐰',n:'PINK MENACE',lvl:1},{e:'🐹',n:'HAMMY',lvl:2},{e:'🐿️',n:'SUGAR RUSH',lvl:3},{e:'🦘',n:'LEG DAY',lvl:4},{e:'😈',n:'DEMON MODE',lvl:5},{e:'🍆',n:'MR. WIGGLES',lvl:2,adult:true}],
-  slurp:    [{e:'🐖',n:'CLASSIC',lvl:0},{e:'🐷',n:'BLUSH',lvl:1},{e:'🐗',n:'FERAL',lvl:2},{e:'🐮',n:'MOO DELUXE',lvl:3},{e:'🦛',n:'ABSOLUTE UNIT',lvl:4},{e:'🐻',n:'BEEFCAKE',lvl:5},{e:'🍑',n:'PEACHY',lvl:2,adult:true}],
-  gremlin:  [{e:'👺',n:'CLASSIC',lvl:0},{e:'👹',n:'ANGY',lvl:1},{e:'👿',n:'LIL DEVIL',lvl:2},{e:'🥸',n:'INCOGNITO',lvl:3},{e:'🤡',n:'CERTIFIED CLOWN',lvl:4},{e:'👻',n:'HALF DEAD',lvl:5},{e:'🍆',n:'GREMLIN+',lvl:2,adult:true}],
-  wallfish: [{e:'🦑',n:'CLASSIC',lvl:0},{e:'🐙',n:'EIGHT GRABS',lvl:1},{e:'🦎',n:'STICKY BOI',lvl:2},{e:'🕷️',n:'CEILING GUY',lvl:3},{e:'🦖',n:'BIG STICKY',lvl:4},{e:'👽',n:'AREA 51',lvl:5},{e:'🍆',n:'SUCTION CUP',lvl:2,adult:true}],
-};
+// Skins are now recolours of the hand-drawn creature. skin value = a hex colour ('' = the
+// character's default colour). Unlock = that character's level. Same palette set for all four.
+const SKIN_PALETTES = [
+  { c: '',        n: 'CLASSIC',      lvl: 0 },
+  { c: '#8dff3a', n: 'TOXIC',        lvl: 1 },
+  { c: '#ff6ad5', n: 'BUBBLEGUM',    lvl: 1 },
+  { c: '#ffcf40', n: 'GOLD RUSH',    lvl: 2 },
+  { c: '#ff3b3b', n: 'DEMON',        lvl: 3 },
+  { c: '#4d6bff', n: 'DEEP VOID',    lvl: 4 },
+  { c: '#e9f0ff', n: 'GHOST',        lvl: 5 },
+  { c: '#20242e', n: 'SHADOW',       lvl: 5 },
+  { c: '#c96ba0', n: 'CURSED FLESH', lvl: 2, adult: true },
+];
+const CHAR_SKINS = { zoomy: SKIN_PALETTES, slurp: SKIN_PALETTES, gremlin: SKIN_PALETTES, wallfish: SKIN_PALETTES };
 // Props (held beside character). Unlock = selected character's level.
 const ACCESSORIES = [
   {e:'',n:'NOTHING',lvl:0},
@@ -150,6 +170,45 @@ AURAS.forEach(a => (AURA_COLOR[a.id] = a.color));
 
 // Seeker unlockable abilities, gated by ACCOUNT level.
 const SEEKER_ABILITIES = { flash: 0, lurk: 1, disguise: 2 };
+
+// ROOM BOTS: one creepy resident per room. You ONLY hear the bot of the room you're standing
+// in (played locally, so no wall-of-voices). Lines are dark / scary / crude / out of pocket.
+// Held to: no slurs, no minors, no targeting real protected groups.
+const ROOM_BOTS = [
+  { room: 'THE KITCHEN',                   x: 130,  y: 780,  name: 'GREASE GOBLIN',   pitch: 0.7 },
+  { room: 'THE LIVING ROOM',               x: 920,  y: 780,  name: 'COUCH WRAITH',    pitch: 0.5 },
+  { room: 'THE BEDROOM (LOCK THE DOOR)',   x: 1860, y: 780,  name: 'THE THING UNDER', pitch: 0.35 },
+  { room: "THE GARAGE (DAD'S LAIR)",       x: 120,  y: 1700, name: 'OIL DADDY',       pitch: 0.55 },
+  { room: 'THE BASEMENT (SUS)',            x: 920,  y: 1700, name: 'BASEMENT BILL',   pitch: 0.3 },
+  { room: 'THE BATHROOM (COURTESY FLUSH)', x: 1580, y: 1700, name: 'THE PLUMBER',     pitch: 0.6 },
+  { room: 'THE BACKYARD (HOA APPROVED)',   x: 2100, y: 1700, name: 'HOA PRESIDENT',   pitch: 0.75 },
+];
+const BOT_LINES = [
+  'i can hear your heartbeat. it is going too fast. it is going to give out. good.',
+  'you smell like fear and off-brand body spray. i am into it.',
+  'the last one who hid in here is still in the walls. wave hello.',
+  'do you ever think about how little is actually holding your skin on?',
+  'i watched you get ready today. that was the outfit? for dying?',
+  'statistically one of you is not making it to breakfast. i have a favorite.',
+  'smile for me. wider. WIDER. keep going until something tears.',
+  'the monster is hungry AND lonely tonight. terrible combination for you.',
+  'your ex is doing great, by the way. thriving. without you. anyway.',
+  'i am not saying you are going to die in here, i am promising it.',
+  'somebody in this room has to pee so bad and it is HILARIOUS to me.',
+  'be honest, if the monster bought you dinner first, would that be so bad?',
+  'i counted your ribs while you were breathing. you have a spare. i will take it.',
+  'your search history flashed before my eyes and honestly you should be caught.',
+  'i can smell exactly who forgot deodorant and i have already told the monster.',
+  'when it grabs you, go limp. it likes a challenge and you will lose either way.',
+  'you are hiding SO well. said no one. i can see your whole entire ass.',
+  'that noise you just held in? i felt that in my soul. let it out. i dare you.',
+  'nobody is coming to save you. i checked. they are all hiding worse than you.',
+  'i want you to know the carpet in here has seen unspeakable things.',
+  'giggle. just a little one. it will not hurt. it will hurt so much.',
+  'you and me, we could run away together. i am kidding. you cannot run.',
+  'the walls are thin and your dignity is thinner.',
+  'somebody in here is thinking something nasty and the monster can taste it.',
+];
 
 const CAUGHT_LINES = [
   'YOU GOT YOINKED', 'ABSOLUTELY DEVOURED', 'SKILL ISSUE', 'THE MONSTER SAYS THANKS FOR THE MEAL',
@@ -301,13 +360,14 @@ socket.on('pos', d => {
   if (d.id === G.myId) return;
   const e = G.ents[d.id] || (G.ents[d.id] = { x: d.x, y: d.y, tx: d.x, ty: d.y });
   e.tx = d.x; e.ty = d.y; e.spot = d.spot; e.camo = d.camo; e.vz = d.vz;
-  e.dg = d.dg || null; e.dgn = d.dgn || ''; e.lurk = !!d.lurk; e.caught = d.caught;
+  e.dg = d.dg || null; e.dgn = d.dgn || ''; e.lurk = !!d.lurk; e.tk = d.tk || 0; e.caught = d.caught;
 });
 
 socket.on('msg', ({ text }) => { feed(text); lobbyLog(text); });
 
 socket.on('ping', p => {
   G.pings.push({ ...p, t: now() });
+  if (p.kind === 'laugh' && p.id && G.ents[p.id]) G.ents[p.id].laughUntil = now() + 1800;
   const d = dist(p, G.me);
   const v = clamp(1 - d / 1100, 0.05, 1);
   if (p.kind === 'laugh') sfx.cackle(v);
@@ -512,10 +572,12 @@ function renderLobby() {
   for (const [id, c] of Object.entries(CHARS)) {
     const b = document.createElement('button');
     b.className = 'char-card' + (meMeta && meMeta.char === id ? ' sel' : '');
-    b.innerHTML = `<span class="ce">${c.emoji}</span><b>${c.name}</b><small>${c.blurb}</small><span class="stat">${c.stat}</span>`;
+    const tint = equipFor(id).skin;
+    b.innerHTML = `<canvas class="char-canvas" width="120" height="120" data-creature="${id}" data-tint="${(tint && tint[0] === '#') ? tint : ''}"></canvas><b>${c.name}</b><small>${c.blurb}</small><span class="stat">${c.stat}</span>`;
     b.onclick = () => { unlockAudio(); socket.emit('char', id); sendCosmetic(id); };
     cg.appendChild(b);
   }
+  paintPreviews(now());
 
   $('hostSettings').style.display = host ? '' : 'none';
   const mg = $('modeGrid'); mg.innerHTML = '';
@@ -627,25 +689,39 @@ function renderLocker() {
   $('adultConfirm').checked = showAdult;
   $('lockerLevel').textContent = `ACCT LVL ${accLevel()}`;
 
+  const eq = equipFor(lockerChar);
+  const tint = (eq.skin && eq.skin[0] === '#') ? eq.skin : '';
   const tabs = $('lockerTabs'); tabs.innerHTML = '';
   for (const [id, c] of Object.entries(CHARS)) {
     const b = document.createElement('button');
     b.className = 'locker-tab' + (lockerChar === id ? ' sel' : '');
-    b.innerHTML = `<span class="lte">${c.emoji}</span><b>${c.name}</b><small>LVL ${charLevel(id)}</small>`;
+    const tt = (equipFor(id).skin && equipFor(id).skin[0] === '#') ? equipFor(id).skin : '';
+    b.innerHTML = `<canvas class="lt-canvas" width="56" height="56" data-creature="${id}" data-tint="${tt}"></canvas><b>${c.name}</b><small>LVL ${charLevel(id)}</small>`;
     b.onclick = () => { lockerChar = id; renderLocker(); };
     tabs.appendChild(b);
   }
 
   const c = CHARS[lockerChar];
   const lvl = charLevel(lockerChar);
-  const eq = equipFor(lockerChar);
-  const skinObj = (CHAR_SKINS[lockerChar].find(s => s.e === eq.skin)) || CHAR_SKINS[lockerChar][0];
   const prog = xpToNext(lockerChar);
   $('lockerCard').innerHTML =
-    `<span class="lc-big">${skinObj.e || c.emoji}${eq.acc || ''}</span>
+    `<canvas class="lc-canvas" width="120" height="120" data-creature="${lockerChar}" data-tint="${tint}" data-hat="${eq.acc || ''}"></canvas>
      <div class="lc-info"><b>${c.name} — LVL ${lvl}</b>
      <div class="xpbar"><div class="xpfill" style="width:${Math.floor(100 * prog.have / prog.need)}%"></div></div>
      <small>${prog.have}/${prog.need} XP to LVL ${lvl + 1} · play this character to level up</small></div>`;
+
+  // SKINS = colour swatches
+  const sg = $('skinGrid'); sg.innerHTML = '';
+  for (const it of SKIN_PALETTES) {
+    if (it.adult && !showAdult) continue;
+    const locked = it.lvl > lvl;
+    const swatch = it.c || CHAR_COL[lockerChar];
+    const b = document.createElement('button');
+    b.className = 'cos-item' + (eq.skin === it.c ? ' sel' : '') + (locked ? ' locked' : '') + (it.adult ? ' adult' : '');
+    b.innerHTML = `<span class="cse" style="display:inline-block;width:26px;height:26px;border-radius:50%;background:${swatch};border:2px solid #0006"></span><b>${it.n}</b>${locked ? `<small>🔒 LVL ${it.lvl}</small>` : it.adult ? '<small>18+</small>' : ''}${locked ? '<span class="lockbadge">🔒</span>' : ''}`;
+    b.onclick = () => { if (locked) return; eq.skin = it.c; saveEquip(); sendCosmetic(lockerChar); renderLocker(); };
+    sg.appendChild(b);
+  }
 
   const mkGrid = (grid, items, current, getVal, getGlyph, apply) => {
     grid.innerHTML = '';
@@ -660,9 +736,9 @@ function renderLocker() {
       grid.appendChild(b);
     }
   };
-  mkGrid($('skinGrid'), CHAR_SKINS[lockerChar], eq.skin, it => it.e, it => it.e, it => (eq.skin = it.e));
   mkGrid($('accGrid'), ACCESSORIES, eq.acc, it => it.e, it => it.e, it => (eq.acc = it.e));
   mkGrid($('auraGrid'), AURAS, eq.aura, it => it.id, it => it.g, it => (eq.aura = it.id));
+  paintPreviews(now());
 
   function saveEquip() { const all = store.equip; all[lockerChar] = { skin: eq.skin, acc: eq.acc, aura: eq.aura }; store.equip = all; }
 }
@@ -710,21 +786,14 @@ function startSeekPhase() {
   if (!G.ambientTimer) G.ambientTimer = setInterval(() => {
     if (!G.room || G.room.phase !== 'seek') return;
     const s = seekerEnt();
-    if (s && Math.random() < 0.75) sfx.honk(clamp(1 - dist(s, G.me) / 1500, 0.06, 0.8));
-  }, 6500);
-  if (!G.mic.ok && !G.chickenTimer) {
-    G.chickenTimer = setInterval(() => {
-      if (G.room && G.room.phase === 'seek' && !G.ghost && !amSeeker()) socket.emit('noise', { kind: 'chicken' });
-    }, 9000);
-    if (!amSeeker()) feed('🐔 NO MIC = CHICKEN MODE. You cluck randomly. Should have allowed the mic.');
-  }
+    if (s && Math.random() < 0.6) sfx.honk(clamp(1 - dist(s, G.me) / 1500, 0.06, 0.7));
+  }, 8000);
   updateButtons(); updateBoosts(); updateHud();
 }
 
 function stopGameLoops() {
   clearInterval(G.posTimer); G.posTimer = null;
   clearInterval(G.ambientTimer); G.ambientTimer = null;
-  clearInterval(G.chickenTimer); G.chickenTimer = null;
   $('reticle').classList.add('hidden');
 }
 
@@ -1070,10 +1139,7 @@ function step() {
     G.myCamo = G.camoTimer > 600;
   } else G.myCamo = false;
 
-  // footstep noise
-  if (moving && !G.ghost && !amSeeker() && phase === 'seek' && c.stepMs && !(meta && meta.perk === 'shoes') && t > G.muteUntil) {
-    if (t - G.lastStep > c.stepMs) { G.lastStep = t; socket.emit('noise', { kind: 'steps' }); }
-  }
+  // (footstep/talk noise pings removed by design: ONLY laughing exposes you)
 
   // seeker touch-catch
   if (amSeeker() && phase === 'seek' && t > G.cds.catch && t > G.eatUntil && t > G.stunUntil) {
@@ -1117,6 +1183,7 @@ function step() {
 
   taskFrame(dt * 16.67);
   worldFx(t);
+  botSpeak(t);
   micFrame();
   render(t);
 }
@@ -1152,6 +1219,7 @@ function sendPos() {
   socket.emit('pos', {
     x: Math.round(G.me.x), y: Math.round(G.me.y), spot: G.mySpot, camo: !!G.myCamo, vz: t < G.vanishUntil,
     dg: dg ? G.disguise.char : null, dgn: dg ? G.disguise.name : '', lurk: amSeeker() && t < G.lurkUntil,
+    tk: G.talkLvl || 0,
   });
 }
 
@@ -1195,44 +1263,89 @@ function render(t) {
   let viewDist;
   if (G.ghost) viewDist = 1500;
   else if (amSeeker()) viewDist = G.flashOn ? 1250 : 560;
-  else viewDist = mode().vision * 1.2;
+  else viewDist = Math.max(300, mode().vision * 0.72); // R.E.P.O. dark: your lantern pool is your world
   if (t < G.lightsUntil) viewDist *= 0.5;
 
-  // ceiling
+  const rmHere = roomAt(G.me.x, G.me.y);
+  // room + compass HUD
+  const COMPASS = ['E', 'SE', 'S', 'SW', 'W', 'NW', 'N', 'NE'];
+  const dirIx = ((Math.round(((facing % (Math.PI * 2)) + Math.PI * 2) / (Math.PI / 4)) % 8) + 8) % 8;
+  $('roomName').textContent = rmHere ? (rmHere.short || rmHere.name) : 'THE VOID';
+  $('compass').textContent = '· facing ' + COMPASS[dirIx];
+  // ceiling: dark gradient tinted by current room
   const cg = ctx.createLinearGradient(0, 0, 0, horizon);
-  cg.addColorStop(0, '#080410'); cg.addColorStop(1, '#1c1132');
+  cg.addColorStop(0, '#05030a'); cg.addColorStop(1, rmHere ? rmHere.ceil : '#160f24');
   ctx.fillStyle = cg; ctx.fillRect(0, 0, w, horizon + 1);
-  // floor tinted by the room you're standing in
-  const rm = roomAt(G.me.x, G.me.y);
-  const fg = ctx.createLinearGradient(0, horizon, 0, h);
-  fg.addColorStop(0, rm ? rm.tint : '#161022'); fg.addColorStop(1, '#050208');
-  ctx.fillStyle = fg; ctx.fillRect(0, horizon, w, h - horizon);
+  ctx.fillStyle = '#050208'; ctx.fillRect(0, horizon, w, h - horizon);
 
-  // walls via raycast
+  // ---- floor casting: a real textured floor that slides under you as you move ----
+  const dirX = Math.cos(facing), dirY = Math.sin(facing);
+  const planeMag = Math.tan(FOV / 2);
+  const planeX = -dirY * planeMag, planeY = dirX * planeMag;
+  const ray0x = dirX - planeX, ray0y = dirY - planeY;
+  const ray1x = dirX + planeX, ray1y = dirY + planeY;
+  const CELL = 128;
+  const FLOORSTEP = Math.max(3, Math.round(4 * DPR));
+  const FCOL = Math.max(4, Math.round(8 * DPR));
+  for (let y = Math.ceil(horizon) + 1; y < h; y += FLOORSTEP) {
+    const p = y - horizon;
+    const d = (WALL_H * 0.5 * proj) / p;               // perpendicular world distance for this row
+    if (d > viewDist * 1.1) continue;
+    const fog = clamp(1 - d / (viewDist * 1.05), 0, 1);
+    const fx0 = G.me.x + ray0x * d, fy0 = G.me.y + ray0y * d;
+    const stepX = (ray1x - ray0x) * d / w, stepY = (ray1y - ray0y) * d / w;
+    for (let x = 0; x < w; x += FCOL) {
+      const wx = fx0 + stepX * x, wy = fy0 + stepY * x;
+      const rmF = roomAt(wx, wy);
+      const chk = ((Math.floor(wx / CELL) + Math.floor(wy / CELL)) & 1);
+      let base = rmF ? rmF.floor : '#141018';
+      // checker: brighten/darken alternating cells
+      const bd = chk ? 16 : -10;
+      const col = shade(base, Math.round(bd));
+      ctx.globalAlpha = 0.12 + 0.88 * fog;
+      ctx.fillStyle = col;
+      ctx.fillRect(x + shx, y, FCOL + 1, FLOORSTEP + 1);
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  // walls via raycast (coloured by the room they belong to, with baseboard + crown trim)
   const COL = Math.max(2, Math.round(3 * DPR));
   const nCols = Math.ceil(w / COL) + 1;
   const zbuf = new Float32Array(nCols);
   for (let i = 0; i < nCols; i++) {
     const x = i * COL;
     const a = facing - FOV / 2 + (x / w) * FOV;
-    const hit = castRay(G.me.x, G.me.y, Math.cos(a), Math.sin(a));
+    const ca = Math.cos(a), sa = Math.sin(a);
+    const hit = castRay(G.me.x, G.me.y, ca, sa);
     let perp = hit.dist * Math.cos(a - facing);
     if (!isFinite(perp) || perp <= 0) perp = Infinity;
     zbuf[i] = perp;
     if (!isFinite(perp) || perp > viewDist) continue;
     const sliceH = (WALL_H * proj) / perp;
-    const shade = clamp(1 - perp / viewDist, 0.05, 1);
-    const dim = hit.side ? 0.7 : 1;
-    const rr = Math.floor(96 * shade * dim), gg = Math.floor(58 * shade * dim), bb = Math.floor(134 * shade * dim);
-    ctx.fillStyle = disco ? `hsl(${(t / 4 + x) % 360},60%,${Math.floor(38 * shade)}%)` : `rgb(${rr},${gg},${bb})`;
-    ctx.fillRect(x + shx, horizon - sliceH / 2, COL + 1, sliceH);
-    ctx.fillStyle = `rgba(${rr + 45},${gg + 45},${bb + 55},${shade})`;
-    ctx.fillRect(x + shx, horizon - sliceH / 2, COL + 1, Math.max(2, sliceH * 0.04));
+    const top = horizon - sliceH / 2;
+    const shd = clamp(1 - perp / viewDist, 0.03, 1) * (hit.side ? 0.68 : 0.92);
+    const rmW = roomAt(G.me.x + ca * (hit.dist - 4), G.me.y + sa * (hit.dist - 4));
+    const wcol = rmW ? rmW.wall : '#5a3f84';
+    ctx.fillStyle = disco ? `hsl(${(t / 4 + x) % 360},55%,${Math.floor(42 * shd)}%)` : shade(wcol, Math.round((shd - 1) * 150));
+    ctx.fillRect(x + shx, top, COL + 1, sliceH);
+    // crown (top) + baseboard (bottom) trim for architectural read
+    ctx.fillStyle = shade(wcol, Math.round(30 * shd - 10));
+    ctx.fillRect(x + shx, top, COL + 1, Math.max(2, sliceH * 0.05));
+    ctx.fillStyle = shade(wcol, Math.round(-70 * shd - 20));
+    ctx.fillRect(x + shx, top + sliceH * 0.86, COL + 1, Math.max(2, sliceH * 0.14));
   }
 
   // gather billboards
   const sprites = [];
   const push = (x, y, glyph, size, alpha, label, labelColor, extra) => sprites.push({ x, y, glyph, size, alpha, label, labelColor, extra: extra || {} });
+  for (const d of DECOR) push(d.x, d.y, d.e, d.s, 1, '', '', { decor: true });
+  for (const b of ROOM_BOTS) {
+    const idx = ROOM_BOTS.indexOf(b);
+    const active = b.room === (rmHere && rmHere.name);
+    const quip = (active && G.botSay && G.botSay.idx === idx && t < G.botSay.until) ? { text: G.botSay.text, until: G.botSay.until } : null;
+    push(b.x, b.y, '', 120, 1, b.name, active ? '#ff6ad5' : 'rgba(255,150,210,0.5)', { bot: true, active, botIdx: idx, quip });
+  }
   for (const sp of SPOTS) {
     if (sp.secret && !store.found[sp.id] && dist(sp, G.me) > 150) continue; // hidden until discovered/near
     const occ = spotOccupants(sp.id);
@@ -1247,22 +1360,26 @@ function render(t) {
   for (const sn of G.snacks) if (t < sn.until) push(sn.x, sn.y, '🍗', 70, 1, '', '', {});
   G.decoys = G.decoys.filter(d => t < d.until);
   G.snacks = G.snacks.filter(sn => t < sn.until);
-  for (const cl of G.clones) push(cl.x, cl.y, cl.skin || (CHARS[cl.char] || CHARS.zoomy).emoji, 100, 1, cl.name, '#fff', { hat: cl.hat });
+  const tintOf = v => (typeof v === 'string' && v[0] === '#') ? v : ''; // ignore old emoji skins
+  for (const cl of G.clones) push(cl.x, cl.y, '', 150, 1, cl.name, '#fff', { creature: cl.char, tint: tintOf(cl.skin), hat: cl.hat, moving: false });
   for (const [id, e] of Object.entries(G.ents)) {
     const p = G.room.players.find(x => x.id === id);
     if (!p) continue;
-    if (e.caught) { if (G.ghost) push(e.x, e.y, '👻', 88, 0.5, p.name, '#cfffea', {}); continue; }
+    const movingE = Math.hypot((e.tx ?? e.x) - e.x, (e.ty ?? e.y) - e.y) > 1.2;
+    if (e.caught) { if (G.ghost) push(e.x, e.y, '', 88, 0.6, p.name, '#cfffea', { ghostArt: true, seed: hash(id) % 9 }); continue; }
     if (e.spot) continue;
     if (p.isSeeker) {
-      if (e.dg && !amSeeker()) push(e.x, e.y, (CHARS[e.dg] || CHARS.zoomy).emoji, 100, 1, e.dgn || '???', '#fff', { hat: '', quip: e.quip });
-      else { let a = 1; if (e.lurk && !amSeeker() && !G.ghost) a = 0.12; push(e.x, e.y, '👹', 165, a, G.room.monsterName, '#ff8bb0', { monster: true, quip: e.quip }); }
+      if (e.dg && !amSeeker()) push(e.x, e.y, '', 150, 1, e.dgn || '???', '#fff', { creature: e.dg, moving: movingE, quip: e.quip });
+      else { let a = 1; if (e.lurk && !amSeeker() && !G.ghost) a = 0.12; push(e.x, e.y, '', 175, a, G.room.monsterName, '#ff8bb0', { monster: true, quip: e.quip }); }
       continue;
     }
     let a = 1;
     if (e.vz) a = amSeeker() ? 0.05 : 0.3; else if (e.camo) a = amSeeker() ? 0.1 : 0.5;
     const cheesy = G.cheese && G.cheese.id === id && t < G.cheese.until;
     if (cheesy) a = Math.max(a, 0.95);
-    push(e.x, e.y, p.skin || (CHARS[p.char] || CHARS.zoomy).emoji, 105, a, p.name, '#fff', { hat: p.hat, acc: p.acc, aura: p.aura, cheesy, quip: e.quip });
+    const skE = seekerEnt();
+    const fearE = !!(skE && !p.isSeeker && dist(skE, e) < 450);
+    push(e.x, e.y, '', 155, a, p.name, '#fff', { creature: p.char, tint: tintOf(p.skin), hat: p.hat, acc: p.acc, auraId: p.aura, moving: movingE, cheesy, quip: e.quip, talk: e.tk || 0, laugh: t < (e.laughUntil || 0), fear: fearE, seed: hash(id) % 9 });
   }
   for (const pg of G.pings) { const age = (t - pg.t) / 1000; if (age > 2.2) continue; push(pg.x, pg.y, PING_EMOJI[pg.kind] || '🔊', 52, clamp(1 - age / 2.2, 0, 1), '', '', { ping: true }); }
   G.pings = G.pings.filter(p => (t - p.t) / 1000 < 2.5);
@@ -1287,20 +1404,30 @@ function render(t) {
   for (const spr of draw) {
     const col = clamp(Math.round(spr.sx / COL), 0, nCols - 1);
     if (zbuf[col] < spr.perp - 6) continue; // occluded by wall
-    const fog = clamp(1 - spr.perp / viewDist, 0.06, 1);
+    // keep characters solid up close/mid, only fade near the far edge of view
+    const fog = spr.perp < viewDist * 0.5 ? 1 : clamp(1 - (spr.perp - viewDist * 0.5) / (viewDist * 0.5), 0.12, 1);
     const fontPx = clamp((spr.size * proj) / spr.perp, 6, h * 2);
     const yFeet = horizon + ((WALL_H * 0.5) * proj) / spr.perp;
-    // aura glow behind
-    if (spr.extra.aura && AURA_COLOR[spr.extra.aura]) {
-      ctx.globalAlpha = fog * 0.5;
-      ctx.fillStyle = AURA_COLOR[spr.extra.aura] === 'rainbow' ? `hsl(${(t / 4) % 360},100%,62%)` : AURA_COLOR[spr.extra.aura];
-      ctx.beginPath(); ctx.arc(spr.sx, yFeet - fontPx * 0.4, fontPx * 0.6, 0, Math.PI * 2); ctx.fill();
+    if (spr.extra.creature) {
+      // hand-drawn animated character
+      drawCreature(spr.sx, yFeet, fontPx, spr.extra.creature, t, {
+        alpha: spr.alpha * fog, tint: spr.extra.tint, hat: spr.extra.hat, acc: spr.extra.acc,
+        auraId: spr.extra.auraId, moving: spr.extra.moving, talk: spr.extra.talk, laugh: spr.extra.laugh,
+        fear: spr.extra.fear, seed: spr.extra.seed,
+      });
+      if (spr.extra.cheesy) { ctx.globalAlpha = spr.alpha * fog; ctx.textAlign = 'center'; ctx.font = `${fontPx * 0.28}px serif`; ctx.fillText('🧀', spr.sx, yFeet - fontPx * 1.0); }
+    } else if (spr.extra.monster) {
+      artMonster(ctx, spr.sx, yFeet, fontPx, t, G.monsterHue, { alpha: spr.alpha * fog, roar: t - G.roarFlash < 900 });
+    } else if (spr.extra.ghostArt) {
+      artGhost(ctx, spr.sx, yFeet, fontPx, t, { alpha: spr.alpha * fog, seed: spr.extra.seed });
+    } else if (spr.extra.bot) {
+      drawBot(spr.sx, yFeet - fontPx * 0.5, fontPx, t, spr.extra.active, spr.extra.botIdx);
+    } else {
+      ctx.globalAlpha = spr.alpha * fog;
+      ctx.font = `${fontPx}px serif`;
+      ctx.fillText(spr.glyph, spr.sx, yFeet);
+      if (spr.extra.hat) { ctx.font = `${fontPx * 0.6}px serif`; ctx.fillText(spr.extra.hat, spr.sx, yFeet - fontPx * 0.82); }
     }
-    ctx.globalAlpha = spr.alpha * fog;
-    ctx.font = `${fontPx}px serif`;
-    ctx.fillText(spr.glyph, spr.sx, yFeet);
-    if (spr.extra.cheesy) { ctx.font = `${fontPx * 0.4}px serif`; ctx.fillText('🧀', spr.sx, yFeet - fontPx * 1.05); }
-    if (spr.extra.hat) { ctx.font = `${fontPx * 0.6}px serif`; ctx.fillText(spr.extra.hat, spr.sx, yFeet - fontPx * 0.82); }
     if (spr.label) {
       ctx.globalAlpha = fog;
       ctx.font = `bold ${clamp(fontPx * 0.14, 9, 22)}px sans-serif`;
@@ -1319,11 +1446,25 @@ function render(t) {
   // reticle for seeker (aim helper)
   $('reticle').classList.toggle('hidden', !(amSeeker() && G.room.phase === 'seek' && !G.mySpot));
 
+  // warm lantern glow: your personal pool of light (R.E.P.O. style)
+  if (!G.ghost) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    const lr = Math.min(w, h) * (amSeeker() && G.flashOn ? 0.32 : 0.46);
+    const lg2 = ctx.createRadialGradient(w / 2, h * 0.60, lr * 0.12, w / 2, h * 0.60, lr);
+    lg2.addColorStop(0, 'rgba(255,178,92,0.15)');
+    lg2.addColorStop(0.6, 'rgba(255,150,70,0.06)');
+    lg2.addColorStop(1, 'rgba(255,140,60,0)');
+    ctx.fillStyle = lg2;
+    ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+  }
+
   // vignette
   ctx.globalAlpha = 1;
-  const vg = ctx.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.35, w / 2, h / 2, Math.max(w, h) * 0.75);
+  const vg = ctx.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.33, w / 2, h / 2, Math.max(w, h) * 0.72);
   vg.addColorStop(0, 'rgba(0,0,0,0)');
-  vg.addColorStop(1, 'rgba(0,0,0,0.55)');
+  vg.addColorStop(1, 'rgba(0,0,0,0.66)');
   ctx.fillStyle = vg; ctx.fillRect(0, 0, w, h);
 
   if (disco) {
@@ -1356,10 +1497,26 @@ function render(t) {
       while (ang < -Math.PI) ang += 2 * Math.PI;
       const edgeX = clamp(w / 2 + Math.tan(clamp(ang, -1.3, 1.3)) * proj, 40 * DPR, w - 40 * DPR);
       const behind = Math.abs(ang) > FOV / 2;
-      ctx.globalAlpha = 0.55 + 0.45 * Math.sin(t / 80);
-      ctx.textAlign = 'center';
-      ctx.font = `${30 * DPR}px serif`;
-      ctx.fillText(behind ? (ang > 0 ? '👹➡️' : '⬅️👹') : '👹', edgeX, 96 * DPR);
+      const pulse = 0.55 + 0.45 * Math.sin(t / 80);
+      // glowing threat marker: two hot eyes inside a warning wedge
+      ctx.globalAlpha = pulse;
+      const my2 = 96 * DPR, sc2 = DPR;
+      const gl = ctx.createRadialGradient(edgeX, my2, 2, edgeX, my2, 26 * sc2);
+      gl.addColorStop(0, 'rgba(255,90,60,0.85)'); gl.addColorStop(1, 'rgba(255,60,40,0)');
+      ctx.fillStyle = gl;
+      ctx.beginPath(); ctx.arc(edgeX, my2, 26 * sc2, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#ffe9b0';
+      ctx.beginPath(); ctx.arc(edgeX - 7 * sc2, my2, 4 * sc2, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(edgeX + 7 * sc2, my2, 4 * sc2, 0, Math.PI * 2); ctx.fill();
+      if (behind) { // direction chevron
+        const dxc = ang > 0 ? 1 : -1;
+        ctx.strokeStyle = 'rgba(255,120,90,0.95)'; ctx.lineWidth = 4 * sc2; ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(edgeX + dxc * 18 * sc2, my2 - 8 * sc2);
+        ctx.lineTo(edgeX + dxc * 26 * sc2, my2);
+        ctx.lineTo(edgeX + dxc * 18 * sc2, my2 + 8 * sc2);
+        ctx.stroke();
+      }
       ctx.globalAlpha = 1;
     }
   }
@@ -1481,6 +1638,96 @@ function drawPlayer(x, y, c, name, hat, alpha, isMe, t, cos) {
   ctx.globalAlpha = 1;
 }
 
+// ---------- hand-drawn creatures ----------
+function shade(hex, amt) {
+  let h = (hex || '#888888').replace('#', '');
+  if (h.length === 3) h = h.split('').map(c => c + c).join('');
+  let r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+  return `rgb(${clamp(r + amt, 0, 255) | 0},${clamp(g + amt, 0, 255) | 0},${clamp(b + amt, 0, 255) | 0})`;
+}
+const HEAD_TOP = { zoomy: -100, slurp: -86, gremlin: -74, wallfish: -96 };
+const CREATURE_MOUTH = { zoomy: [0, -78], slurp: [0, -40], gremlin: [0, -46], wallfish: [0, -54] };
+const CREATURE_EYES = { zoomy: -88, slurp: -50, gremlin: -58, wallfish: -70 };
+function cEye(g, x, y, rw, rh, lx, ly, pr) {
+  g.fillStyle = '#fff';
+  g.beginPath(); g.ellipse(x, y, rw, rh, 0, 0, 7); g.fill();
+  g.fillStyle = '#0b0b14';
+  g.beginPath(); g.arc(x + lx, y + ly, pr, 0, 7); g.fill();
+  g.fillStyle = 'rgba(255,255,255,0.85)';
+  g.beginPath(); g.arc(x + lx - pr * 0.4, y + ly - pr * 0.4, pr * 0.35, 0, 7); g.fill();
+}
+function limb(g, x1, y1, x2, y2, w, col) {
+  g.strokeStyle = col; g.lineWidth = w; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke();
+}
+function blob(g, pts, fill) {
+  g.fillStyle = fill; g.beginPath();
+  for (let i = 0; i < pts.length; i++) { const [px, py] = pts[i]; i ? g.lineTo(px, py) : g.moveTo(px, py); }
+  g.closePath(); g.fill();
+}
+
+// Delegates to the hand-painted art engine in art.js (no emojis). Keeps the old signature
+// so the FP renderer, lobby cards, and locker previews all use the same rigs.
+function drawCreature(cx, feetY, h, charId, t, o, g) {
+  artCreature(g || ctx, cx, feetY, h, charId, t, o || {});
+}
+
+// preview canvases in the lobby/locker: <canvas data-creature="zoomy" data-tint="#..">
+function paintPreviews(t) {
+  document.querySelectorAll('canvas[data-creature]').forEach(cn => {
+    if (!cn.isConnected || cn.offsetParent === null) return;
+    const g = cn.getContext('2d');
+    const w = cn.width, h = cn.height;
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    g.clearRect(0, 0, w, h);
+    drawCreature(w / 2, h * 0.92, h * 0.82, cn.dataset.creature, t, {
+      tint: cn.dataset.tint || '', hat: cn.dataset.hat || '', moving: cn.dataset.moving === '1',
+    }, g);
+  });
+}
+setInterval(() => { if (G.screen === 'lobby' || !$('locker').classList.contains('hidden')) paintPreviews(now()); }, 40);
+
+// the room bot: a floating creepy jester head bolted to each room. glows + yaps when active.
+function drawBot(cx, cy, size, t, active, idx) {
+  const s = size / 90, bobv = Math.sin(t / 320 + idx) * 6;
+  ctx.save(); ctx.translate(cx, cy + bobv * s); ctx.scale(s, s);
+  if (active) { ctx.globalAlpha = 0.35 + 0.2 * Math.sin(t / 200); ctx.fillStyle = '#ff3ba3'; ctx.beginPath(); ctx.arc(0, 0, 46, 0, 7); ctx.fill(); ctx.globalAlpha = 1; }
+  ctx.fillStyle = '#ff3ba3';
+  ctx.beginPath(); ctx.moveTo(-20, -22); ctx.lineTo(-32, -48); ctx.lineTo(-6, -30); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(20, -22); ctx.lineTo(32, -48); ctx.lineTo(6, -30); ctx.fill();
+  ctx.fillStyle = '#ffe14d'; ctx.beginPath(); ctx.arc(-32, -48, 4, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(32, -48, 4, 0, 7); ctx.fill();
+  const rg = ctx.createRadialGradient(-8, -8, 4, 0, 0, 34);
+  rg.addColorStop(0, '#48123a'); rg.addColorStop(1, '#14041a'); ctx.fillStyle = rg;
+  ctx.beginPath(); ctx.arc(0, 0, 32, 0, 7); ctx.fill();
+  ctx.fillStyle = active ? '#ff5470' : '#7a2f4a';
+  ctx.beginPath(); ctx.arc(-11, -5, 6.5, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(11, -5, 6.5, 0, 7); ctx.fill();
+  ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(-11, -5, 2.5, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(11, -5, 2.5, 0, 7); ctx.fill();
+  const mo = active ? 3 + Math.abs(Math.sin(t / 110)) * 7 : 2.5;
+  ctx.fillStyle = '#120008'; ctx.beginPath(); ctx.ellipse(0, 13, 16, mo + 4, 0, 0, Math.PI); ctx.fill();
+  ctx.fillStyle = '#fff'; for (let i = -2; i <= 2; i++) { ctx.beginPath(); ctx.moveTo(i * 6 - 2, 13); ctx.lineTo(i * 6 + 2, 13); ctx.lineTo(i * 6, 13 + mo + 3); ctx.fill(); }
+  ctx.restore();
+}
+
+function speakBot(text, pitch) {
+  try { const u = new SpeechSynthesisUtterance(text); u.pitch = pitch; u.rate = 0.92; u.volume = 1; speechSynthesis.speak(u); } catch {}
+}
+// only the bot of the room YOU are standing in talks, and only one at a time -> no voice soup
+function botSpeak(t) {
+  if (!G.room || (G.room.phase !== 'seek' && G.room.phase !== 'hiding')) return;
+  const rm = roomAt(G.me.x, G.me.y); if (!rm) return;
+  const bi = ROOM_BOTS.findIndex(b => b.room === rm.name); if (bi < 0) return;
+  if (t < (G.botNext || 0)) return;
+  if (typeof speechSynthesis !== 'undefined' && speechSynthesis.speaking) { G.botNext = t + 2500; return; }
+  G.botNext = t + 9000 + Math.random() * 6000;
+  const bot = ROOM_BOTS[bi];
+  let line = BOT_LINES[Math.floor(Math.random() * BOT_LINES.length)];
+  const here = G.room.players.filter(p => p.id !== G.myId && !p.caught && !p.isSeeker);
+  if (here.length && Math.random() < 0.35) line = line.replace(/\byou\b/i, here[Math.floor(Math.random() * here.length)].name);
+  speakBot(line, bot.pitch);
+  G.botSay = { idx: bi, text: line, until: t + 5200 };
+  feed('👺 ' + bot.name + ': ' + line);
+}
+
 function drawMonster(x, y, t) {
   const wob = Math.sin(t / 120) * 5;
   const r = 52 + Math.sin(t / 200) * 4;
@@ -1544,8 +1791,9 @@ function feed(text) {
 
 // ---------- mic ----------
 let audioCtx = null, analyser = null, micData = null;
-async function initMic() {
-  if (G.mic.tried) return;
+async function initMic(force) {
+  if (G.mic.ok) return;
+  if (G.mic.tried && !force) return;
   G.mic.tried = true;
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
@@ -1556,12 +1804,126 @@ async function initMic() {
     src.connect(analyser);
     micData = new Float32Array(analyser.fftSize);
     G.mic.ok = true;
+    VC.stream = stream; // proximity voice uses the same mandatory mic
     $('micLabel').textContent = '🎤';
+    updateMicGate();
   } catch (e) {
     G.mic.ok = false;
-    $('micLabel').textContent = '🐔';
+    $('micLabel').textContent = '🚫';
+    updateMicGate();
   }
 }
+// mic is mandatory: block the game view until it's granted
+function updateMicGate() {
+  const need = G.screen === 'game' && !G.mic.ok;
+  $('micGate').classList.toggle('hidden', !need);
+}
+$('btnEnableMic').onclick = () => { unlockAudio(); initMic(true); };
+setInterval(updateMicGate, 500);
+
+// ---------- proximity voice chat ----------
+// Real voices, peer-to-peer, fading with distance and muffled through walls.
+// Connections open only to players within earshot (distance-gated mesh, hysteresis),
+// so even a 16-player room stays cheap. No audio is ever stored or sent to the server.
+const VC = { stream: null, peers: {} };
+const VOICE_OPEN = 1150, VOICE_CLOSE = 1450, VOICE_REF = 950;
+const RTC_CFG = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+
+function vcPeer(id, initiator) {
+  if (VC.peers[id]) return VC.peers[id];
+  const pc = new RTCPeerConnection(RTC_CFG);
+  const P = { pc, gain: null, filter: null, audioEl: null, linked: false };
+  VC.peers[id] = P;
+  if (VC.stream) VC.stream.getAudioTracks().forEach(tr => pc.addTrack(tr, VC.stream));
+  else pc.addTransceiver('audio', { direction: 'recvonly' });
+  pc.onicecandidate = e => { if (e.candidate) socket.emit('rtc', { to: id, data: { candidate: e.candidate } }); };
+  pc.ontrack = e => {
+    const stream = e.streams[0] || new MediaStream([e.track]);
+    // iOS/Safari: a live (muted) audio element is required for WebRTC audio to flow into WebAudio
+    const a = new Audio(); a.srcObject = stream; a.muted = true; a.playsInline = true; a.play().catch(() => {});
+    P.audioEl = a;
+    unlockAudio();
+    const src = audioCtx.createMediaStreamSource(stream);
+    const filter = audioCtx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 18000;
+    const gain = audioCtx.createGain(); gain.gain.value = 0;
+    src.connect(filter).connect(gain).connect(audioCtx.destination);
+    P.gain = gain; P.filter = filter;
+    if (!P.linked) {
+      P.linked = true;
+      const p = G.room && G.room.players.find(x => x.id === id);
+      if (p) feed(`🎙️ voice linked: ${p.name}`);
+    }
+  };
+  if (initiator) {
+    pc.onnegotiationneeded = async () => {
+      try {
+        await pc.setLocalDescription(await pc.createOffer());
+        socket.emit('rtc', { to: id, data: { sdp: pc.localDescription } });
+      } catch {}
+    };
+  }
+  return P;
+}
+function vcClose(id) {
+  const P = VC.peers[id];
+  if (!P) return;
+  try { P.pc.close(); } catch {}
+  if (P.audioEl) { P.audioEl.srcObject = null; }
+  delete VC.peers[id];
+}
+socket.on('rtc', async ({ from, data }) => {
+  try {
+    const P = vcPeer(from, false);
+    if (data.sdp) {
+      await P.pc.setRemoteDescription(data.sdp);
+      if (data.sdp.type === 'offer') {
+        await P.pc.setLocalDescription(await P.pc.createAnswer());
+        socket.emit('rtc', { to: from, data: { sdp: P.pc.localDescription } });
+      }
+    } else if (data.candidate) {
+      await P.pc.addIceCandidate(data.candidate);
+    }
+  } catch {}
+});
+function voiceGainFor(p, e) {
+  // living players never hear ghosts; ghosts hear everybody (quietly, everywhere-ish)
+  if (!G.ghost && p.caught) return { g: 0, muffle: false };
+  const d = dist(e, G.me);
+  let g = clamp(1 - d / VOICE_REF, 0, 1); g *= g;
+  let muffle = false;
+  if (g > 0.01) {
+    const dx = e.x - G.me.x, dy = e.y - G.me.y;
+    const hit = castRay(G.me.x, G.me.y, dx / (d || 1), dy / (d || 1));
+    if (hit.dist < d - 20) { muffle = true; g *= 0.35; }
+  }
+  if (G.ghost) g = Math.max(g * 0.9, 0.1);
+  return { g, muffle };
+}
+function voiceTick() {
+  if (!G.room || G.screen !== 'game' || !G.myId) {
+    for (const id of Object.keys(VC.peers)) vcClose(id);
+    return;
+  }
+  for (const p of G.room.players) {
+    if (p.id === G.myId) continue;
+    const e = G.ents[p.id];
+    const d = e ? dist(e, G.me) : Infinity;
+    const has = !!VC.peers[p.id];
+    if (!has && d < VOICE_OPEN) vcPeer(p.id, G.myId < p.id);
+    else if (has && d > VOICE_CLOSE) vcClose(p.id);
+    const P = VC.peers[p.id];
+    if (P && P.gain && e) {
+      const { g, muffle } = voiceGainFor(p, e);
+      const t0 = audioCtx.currentTime;
+      P.gain.gain.setTargetAtTime(g, t0, 0.15);
+      P.filter.frequency.setTargetAtTime(muffle ? 550 : 18000, t0, 0.15);
+    }
+  }
+  for (const id of Object.keys(VC.peers)) {
+    if (!G.room.players.find(p => p.id === id)) vcClose(id);
+  }
+}
+setInterval(voiceTick, 400);
 
 function micFrame() {
   if (!G.mic.ok || !analyser) return;
@@ -1573,15 +1935,16 @@ function micFrame() {
   const sens = mode().micSens || 1;
   if (rms < G.mic.base * 2.5 + 0.01) G.mic.base = G.mic.base * 0.997 + rms * 0.003;
   $('micFill').style.width = `${clamp(rms * 900, 0, 100)}%`;
+  // talk level 0-3 drives your creature's mouth (everyone sees you yapping)
+  G.talkLvl = rms > G.mic.base * 4 + 0.05 ? 3 : rms > G.mic.base * 3 + 0.028 ? 2 : rms > G.mic.base * 2.2 + 0.015 ? 1 : 0;
 
   const t = now();
   if (t < G.muteUntil) { $('micLabel').textContent = '🤐'; return; }
-  $('micLabel').textContent = G.mic.ok ? '🎤' : '🐔';
+  $('micLabel').textContent = '🎤';
   const inRound = G.room && G.room.phase === 'seek' && !G.ghost && G.screen === 'game';
   const poker = 1 + 0.15 * upLvl('poker');
+  // ONLY sustained laughter matters. talking/breathing/whispering does nothing.
   const laughThresh = Math.max(0.07 / sens, G.mic.base * 5) * poker;
-  const talkThresh = Math.max(0.035 / sens, G.mic.base * 2.8);
-
   G.mic.hot.push(rms > laughThresh ? 1 : 0);
   if (G.mic.hot.length > 10) G.mic.hot.shift();
   const hotCount = G.mic.hot.reduce((a, b) => a + b, 0);
@@ -1590,10 +1953,7 @@ function micFrame() {
     G.mic.lastLaugh = t;
     G.mic.hot = [];
     socket.emit('laugh');
-    if (!amSeeker()) feed('😂 LAUGH DETECTED. The mic snitched. It always snitches.');
-  } else if (inRound && !amSeeker() && rms > talkThresh && t - G.mic.lastTalk > 1600 && hotCount < 5) {
-    G.mic.lastTalk = t;
-    socket.emit('noise', { kind: 'talk' });
+    if (!amSeeker()) feed('😂 YOU LAUGHED. The mic heard it. It always hears it.');
   }
 }
 
@@ -1669,12 +2029,14 @@ function speakQuip(text, id, vol) {
   } catch {}
 }
 
-// logo idle chaos
+// home logo: a live painted monster whose colour slowly shifts
 setInterval(() => {
-  const faces = ['👹', '👺', '🤡', '👾', '🧌', '😈'];
-  const el = $('logoMonster');
-  if (el && G.screen === 'home') el.textContent = faces[Math.floor(Math.random() * faces.length)];
-}, 1800);
+  const cn = $('logoCanvas');
+  if (!cn || G.screen !== 'home') return;
+  const g = cn.getContext('2d');
+  g.clearRect(0, 0, cn.width, cn.height);
+  artMonster(g, cn.width / 2, cn.height - 8, 130, now(), (now() / 40) % 360, { roar: Math.sin(now() / 2400) > 0.55 });
+}, 50);
 
 function rafLoop() { step(); requestAnimationFrame(rafLoop); }
 requestAnimationFrame(rafLoop);

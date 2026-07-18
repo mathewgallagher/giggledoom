@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GIGGLEDOOM character previews</title>
+<style>
+  body { background: #0b0614; color: #f3ecff; font-family: -apple-system, sans-serif; margin: 0; padding: 18px; }
+  h2 { margin: 18px 0 6px; font-size: 18px; letter-spacing: 1px; }
+  .row { background: radial-gradient(ellipse at 50% 80%, #241530 0%, #0b0614 75%); border: 1px solid #3d2263; border-radius: 14px; margin-bottom: 8px; }
+  canvas { display: block; width: 100%; max-width: 1040px; }
+  .labels { display: flex; max-width: 1040px; margin: 0 auto; }
+  .labels span { flex: 1; text-align: center; font-size: 11px; opacity: 0.6; padding-bottom: 8px; letter-spacing: 2px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="art.js"></script>
+<script>
+const ONLY = (new URLSearchParams(location.search).get('only') || '').split(',').filter(Boolean);
+let CHARS = [
+  ['zoomy', 'ZOOMY', ''], ['slurp', 'BIG SLURP', ''], ['gremlin', 'LIL GREMLIN', ''], ['wallfish', 'WALLFISH', ''],
+  ['zoomy', 'ZOOMY (GOLD RUSH skin)', '#ffcf40'],
+];
+if (ONLY.length) CHARS = CHARS.filter(([id]) => ONLY.includes(id));
+const SHOW_MONSTER = !ONLY.length || ONLY.includes('monster');
+const STATES = [
+  { label: 'IDLE', o: {} },
+  { label: 'RUNNING', o: { moving: true } },
+  { label: 'TALKING', o: { talk: 3 } },
+  { label: 'LAUGHING (CAUGHT)', o: { laugh: true } },
+  { label: 'SCARED', o: { fear: true } },
+];
+const root = document.getElementById('root');
+const canvases = [];
+for (const [id, name, tint] of CHARS) {
+  const h2 = document.createElement('h2'); h2.textContent = name; root.appendChild(h2);
+  const div = document.createElement('div'); div.className = 'row';
+  const cv = document.createElement('canvas'); cv.width = 1040; cv.height = 300;
+  div.appendChild(cv);
+  const lbl = document.createElement('div'); lbl.className = 'labels';
+  lbl.innerHTML = STATES.map(s => `<span>${s.label}</span>`).join('');
+  div.appendChild(lbl);
+  root.appendChild(div);
+  canvases.push({ cv, id, tint });
+}
+// monster + ghost
+let mcv = null;
+if (SHOW_MONSTER) {
+  const mh = document.createElement('h2'); mh.textContent = 'THE MONSTER (hue shifts every round) + GHOST'; root.appendChild(mh);
+  const mdiv = document.createElement('div'); mdiv.className = 'row';
+  mcv = document.createElement('canvas'); mcv.width = 1040; mcv.height = 340;
+  mdiv.appendChild(mcv); root.appendChild(mdiv);
+}
+
+function loop() {
+  const t = performance.now();
+  for (const { cv, id, tint } of canvases) {
+    const g = cv.getContext('2d');
+    g.clearRect(0, 0, cv.width, cv.height);
+    STATES.forEach((st, i) => {
+      artCreature(g, 104 + i * 208, 272, 235, id, t, { ...st.o, tint, seed: i });
+    });
+  }
+  if (mcv) {
+    const g = mcv.getContext('2d');
+    g.clearRect(0, 0, mcv.width, mcv.height);
+    artMonster(g, 200, 315, 290, t, 300, {});
+    artMonster(g, 520, 315, 290, t, 120, { roar: true });
+    artGhost(g, 800, 315, 220, t, {});
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
