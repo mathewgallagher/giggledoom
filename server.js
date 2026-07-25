@@ -25,10 +25,10 @@ const MODES = {
 };
 
 const PERKS = [
-  { id: 'shoes',  emoji: 'ü•∑', name: 'SILENT SHOES',  desc: 'Your footsteps make zero noise next round.' },
-  { id: 'smoke',  emoji: 'üí®', name: 'SMOKE BOMB',    desc: 'One use: blind the monster for 4 seconds.' },
-  { id: 'double', emoji: 'ü™Ü', name: 'BODY DOUBLE',   desc: 'One use: drop a decoy clone of yourself.' },
-  { id: 'snack',  emoji: 'üçó', name: 'MONSTER SNACK', desc: 'One use: throw a snack. Monster MUST stop and eat it.' },
+  { id: 'shoes',  emoji: '🥷', name: 'SILENT SHOES',  desc: 'Your footsteps make zero noise next round.' },
+  { id: 'smoke',  emoji: '💨', name: 'SMOKE BOMB',    desc: 'One use: blind the monster for 4 seconds.' },
+  { id: 'double', emoji: '🪆', name: 'BODY DOUBLE',   desc: 'One use: drop a decoy clone of yourself.' },
+  { id: 'snack',  emoji: '🍗', name: 'MONSTER SNACK', desc: 'One use: throw a snack. Monster MUST stop and eat it.' },
 ];
 
 // Base game is rated R now. After Dark makes it worse. On purpose.
@@ -610,7 +610,7 @@ const sbRoom = code => '3d:' + code;
 
 // house progression + the secret shelf, per house code.
 // XP persists to a JSON file so a server restart doesn't wipe the family home.
-// (survives restarts; a redeploy on ephemeral disk still resets it ‚Äî good enough for now)
+// (survives restarts; a redeploy on ephemeral disk still resets it — good enough for now)
 const fs = require('fs');
 const XP_FILE = path.join(__dirname, 'housexp.json');
 const houseXP = new Map(), houseShelf = new Map();
@@ -706,11 +706,11 @@ const HS_CHEST = [-1.7, -4.35];
 // TONIGHT'S HOUSE RULE: most nights are normal; some nights the house has opinions
 const HOUSE_RULES = [
   null, null, null,
-  { id: 'fog', label: 'PEA SOUP ‚Äî the fog is personal tonight' },
-  { id: 'zoomies', label: 'ZOOMIES ‚Äî everyone is 15% faster' },
-  { id: 'creaky', label: 'CREAKY BONES ‚Äî the floors snitch louder' },
-  { id: 'bloodmoon', label: 'BLOOD MOON ‚Äî the lights hate you' },
-  { id: 'payday', label: 'PAYDAY ‚Äî double coins' },
+  { id: 'fog', label: 'PEA SOUP — the fog is personal tonight' },
+  { id: 'zoomies', label: 'ZOOMIES — everyone is 15% faster' },
+  { id: 'creaky', label: 'CREAKY BONES — the floors snitch louder' },
+  { id: 'bloodmoon', label: 'BLOOD MOON — the lights hate you' },
+  { id: 'payday', label: 'PAYDAY — double coins' },
 ];
 
 function sbWin(code, winner) {
@@ -784,7 +784,7 @@ function sbTally(code) {
 }
 io.on('connection', socket => {
   // a phone that locked its screen comes back with the same socket id and its
-  // house restored (connectionStateRecovery) ‚Äî cancel its scheduled removal
+  // house restored (connectionStateRecovery) — cancel its scheduled removal
   let code3d = (socket.recovered && socket.data.code3d) || null;
   if (socket.recovered && pending3d.has(socket.id)) {
     clearTimeout(pending3d.get(socket.id));
@@ -799,7 +799,7 @@ io.on('connection', socket => {
     code3d = clean;
     socket.data.code3d = clean;
     let nm = sanitizeName(name);
-    for (let n = 2; [...r.values()].some(q => q.name === nm); n++) nm = sanitizeName(name) + '¬∑' + n; // no twins
+    for (let n = 2; [...r.values()].some(q => q.name === nm); n++) nm = sanitizeName(name) + '·' + n; // no twins
     const p = {
       id: socket.id,
       name: nm,
@@ -1015,7 +1015,7 @@ io.on('connection', socket => {
     const p = r.get(socket.id);
     if (!p) return;
     g.stats.laughs[socket.id] = (g.stats.laughs[socket.id] || 0) + 1;
-    // a laugh is a dinner bell ‚Äî reachable floors only (stairs need house lvl 5, attic never)
+    // a laugh is a dinner bell — reachable floors only (stairs need house lvl 5, attic never)
     if (g.monster && (p.y || 0) < 5.5 && ((p.y || 0) < 1.8 || g.monster.canClimb)) {
       g.monster.lure = { x: p.x, z: p.z, y: p.y || 0 };
       g.monster.lureUntil = Date.now() + 12000;

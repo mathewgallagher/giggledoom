@@ -1,4 +1,4 @@
-# GIGGLEDOOM ‚Äî 3D Rebuild (Three.js) ‚Äî status doc
+# GIGGLEDOOM — 3D Rebuild (Three.js) — status doc
 
 If a session ends mid-work, resume from here.
 Owner intent (Mathew): graphics at the level of The Texas Chainsaw Massacre game
@@ -7,19 +7,19 @@ phone browser; agreed path is a Three.js/WebGL rebuild: real 3D textured rooms,
 dynamic lights + shadows, 3D characters, keeping ALL existing systems (socket.io
 netcode, voice chat, mic-laugh, bots, tasks, cosmetics, coins).
 
-## DONE 2026-07-22 (pass 2) ‚Äî FULL 8-ROOM MAP "THE GIGGLEHOUSE" (verified, desktop + mobile)
+## DONE 2026-07-22 (pass 2) — FULL 8-ROOM MAP "THE GIGGLEHOUSE" (verified, desktop + mobile)
 Code now split into 3 modules (all in public/, all must ship together):
-- `public/3d.js` ‚Äî engine: renderer, FP controls (WASD + touch), collision, room
+- `public/3d.js` — engine: renderer, FP controls (WASD + touch), collision, room
   detection + SNOOPED x/8 counter, ONE roaming shadow PointLight that lerps to the
   current room's key-light spot (color/intensity/pos), speaker-bubble system,
   window.GD3 debug {P, keys, rooms, go(name), freeze}.
-- `public/3d-world.js` ‚Äî buildWorld(): 16 procedural textures, wallRun() wall builder
+- `public/3d-world.js` — buildWorld(): 16 procedural textures, wallRun() wall builder
   (per-room styles both sides, door gaps + lintels + jambs, colliders), floors/ceilings,
   all 8 rooms + props + tickers + speakers + per-room fill lights + flicker functions.
-- `public/3d-chars.js` ‚Äî primitive rigs: ZOOMY, MONSTER (asleep on folding chair, ZZZ
+- `public/3d-chars.js` — primitive rigs: ZOOMY, MONSTER (asleep on folding chair, ZZZ
   sprites, breathing), GNOME, TEDDY (glowing eye), SKELETON (party hat, jaw drops),
   DUCK (incl. cursed variant), plus canvasPlane/signPlane helpers.
-- `public/lib/three.module.min.js` + `public/lib/three.core.min.js` ‚Äî Three.js r180
+- `public/lib/three.module.min.js` + `public/lib/three.core.min.js` — Three.js r180
   vendored (NO CDN). BOTH files required or the page silently renders black.
 
 THE ROOMS (each has a key light w/ its own flicker + a talking thing):
@@ -39,19 +39,19 @@ THE ROOMS (each has a key light w/ its own flicker + a talking thing):
 - THE DISCO CRYPT: stone walls, glowing disco ball + 3 orbiting colored SpotLights,
   coffins (one upright with amber eyes inside), SKELETON in party hat (speaker),
   jukebox, old confetti, vent.
-- THE GNOME YARD: indoor night garden ‚Äî grass, hedge walls, star/moon ceiling
+- THE GNOME YARD: indoor night garden — grass, hedge walls, star/moon ceiling
   (MeshBasic), fireflies, dead tree, 12 gnomes that all slowly rotate to stare at the
   player (staggered speeds), GNORMAN on a throne (speaker).
 - THE BASEMENT: dirt floor, concrete, hard-flicker bare bulb, chains, crates, THE
   MONSTER asleep on a tiny folding chair (3 amber eyes, ZZZ, breathing; speaker), break
   table + mug, BACK IN 5 sign, BREAK O CLOCK, SECURITY camera desk w/ 3 static-noise
   monitors (mode foreshadow).
-Objective: SNOOP ALL 8 ROOMS ‚Üí "HOUSE FULLY SNOOPED. YOU LIVE HERE NOW."
+Objective: SNOOP ALL 8 ROOMS → "HOUSE FULLY SNOOPED. YOU LIVE HERE NOW."
 Verified: every room screenshot-toured, doorway traversal + wall collision exact,
 zero console errors, mobile portrait layout good.
 
 ## PLANNED FLAGSHIP MULTIPLAYER MODE (Mathew's ask 2026-07-22): social deduction
-"Our version of Among Us" using existing systems ‚Äî hidden killer(s) among players
+"Our version of Among Us" using existing systems — hidden killer(s) among players
 (seeker system generalized), tasks (already exist), proximity voice (already exists),
 security cameras (desk built), vents (props built), emergency meeting button (built).
 Own art/names only, nothing copied from Among Us. Name TBD (working: SNEAKY BASTARD MODE).
@@ -65,7 +65,7 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
 - Solo-explore wart FIXED: makeTask(p, room) now drops the 'taunt' task
   ("get close to the monster") when room.seekerId is null (solo). server.js:257.
 
-## DONE 2026-07-22 (pass 3) ‚Äî MULTIPLAYER WALKABOUT in the 3D house (verified, 2 clients)
+## DONE 2026-07-22 (pass 3) — MULTIPLAYER WALKABOUT in the 3D house (verified, 2 clients)
 - server.js: new self-contained `io.on('connection')` block for the 3D beta (events
   3d-join/3d-pos/3d-left, rooms3d Map keyed by house code, 16-player cap, reuses
   sanitizeName). ZERO contact with the 2D game state. Client pos relayed volatile.
@@ -77,26 +77,26 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
   dome head+6 wiggling tentacles), shared animateRig (bob, shoulder-pivot arm swing,
   blinks), makeNameTag billboard.
 - 3d.html loads /socket.io/socket.io.js (classic script) before the module.
-- VERIFIED with two pane tabs: MATHEW (zoomy) + GREMBO (gremlin) in code HOUSE ‚Äî
+- VERIFIED with two pane tabs: MATHEW (zoomy) + GREMBO (gremlin) in code HOUSE —
   both saw each other's rig + name tag, live position sync (teleport propagated),
   IN THE HOUSE: 2 on both, zero client/server errors.
-- DONE same day (pass 4) ‚Äî PROXIMITY VOICE in 3D:
+- DONE same day (pass 4) — PROXIMITY VOICE in 3D:
   - server.js: '3d-rtc' signaling relay (validates target is in the same house) +
     talk-level `t` field on 3d-pos packets.
   - public/3d-voice.js: WebRTC mesh (initiator = lower socket id, STUN only, no TURN),
     auto-connect when peers within 9m / drop beyond 13m (hysteresis), per-peer audio
-    graph (MediaStreamSource ‚Üí lowpass BiquadFilter ‚Üí GainNode), gain = (1-d/7m)^2,
+    graph (MediaStreamSource → lowpass BiquadFilter → GainNode), gain = (1-d/7m)^2,
     wall-muffle via segment-vs-collider raycast (lowpass 520Hz + 0.4x gain when a wall
     blocks the line, doorways stay clear), iOS muted-audio-element workaround, mic
-    OPTIONAL (denied = silent ghost, recvonly), own-mic analyser ‚Üí talk level 0-3.
+    OPTIONAL (denied = silent ghost, recvonly), own-mic analyser → talk level 0-3.
   - 3d-net.js: MIC LIVE / MIC MUTED / NO MIC (SILENT GHOST) button bottom-right,
-    talk level rides pos packets ‚Üí remote rigs' mouths flap (R.mouth scale).
+    talk level rides pos packets → remote rigs' mouths flap (R.mouth scale).
   - VERIFIED in pane (mic blocked there): both tabs' RTCPeerConnection reached
     "connected" via the relay; mute chip reflects mic state; zero errors.
   - NEEDS MATHEW: real 2-device audio test (like the 2D one). NOTE: mic requires
-    HTTPS or localhost ‚Äî phone-via-LAN-IP over http will NOT get a mic prompt; test
+    HTTPS or localhost — phone-via-LAN-IP over http will NOT get a mic prompt; test
     voice on the deployed Render site (https) or two browsers on the laptop.
-- DONE same day (pass 5) ‚Äî SNEAKY BASTARD MODE v1 (social deduction, fully playable):
+- DONE same day (pass 5) — SNEAKY BASTARD MODE v1 (social deduction, fully playable):
   - server.js: games3d state per house. Events: sb-start (host only, 2+ players, random
     imposter, 4 chores each from 8, imposter chores are fake), sb-kill (server validates
     imposter + 2.2m range + 25s cooldown; body recorded), sb-report (3.2m of a body),
@@ -119,13 +119,13 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
   - Polish backlog: body mesh + meeting overlay not visually screenshotted (logic
     verified), name uniqueness per house not enforced (duplicates allowed), cameras
     desk not yet interactive, no vents travel, no sabotages, kill has no animation.
-- DONE same day (pass 6) ‚Äî MEAT PASS (verticality, hideables, mini-games, juice):
+- DONE same day (pass 6) — MEAT PASS (verticality, hideables, mini-games, juice):
   - JUMP + gravity in 3d.js: colliders now carry a `top` height; you can stand on any
     prop with a reachable top (crates, tables, coffins, jukebox, teddy, the sleeping
     monster). Parkour chains via crate stacks. Space / round JUMP button. y syncs over
     the net (3d-pos has y; rigs float at altitude).
   - HIDEABLES (engine-level, work in walkabout AND rounds): hollow props w/ ajar doors,
-    HIDE IN / GET OUT button within 1.5m ‚Äî THE FRIDGE (kitchen), THE WARDROBE (nursery),
+    HIDE IN / GET OUT button within 1.5m — THE FRIDGE (kitchen), THE WARDROBE (nursery),
     THE STANDING COFFIN (crypt), THE GNOME SHED (yard, gnome on roof). Real geometric
     hiding: others only see you through the door crack. world.hideys drives it.
   - MINI-GAME CHORES (3d-game.js) replace hold-to-complete: mash (tap fast, drains if
@@ -141,10 +141,10 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
     kitchen prep table + ham, nursery rocking horse (never stops rocking), crypt
     candelabras + bone pile, yard stump, basement shelf rack + boiler.
   - VERIFIED: standing on crate stack at exactly y=1.80, fridge hide in/out + interior
-    sightline, mash chore completed ‚Üí server PROGRESS 1/4, coins awarded + persisted
+    sightline, mash chore completed → server PROGRESS 1/4, coins awarded + persisted
     (task +10, imposter-win +50), zero console/server errors. Wardrobe/coffin/shed use
     the same pattern as the fridge (visuals unscreenshotted).
-- DONE same day (pass 7) ‚Äî DECOR PASS ("10X the rooms", rated R, filled spaces):
+- DONE same day (pass 7) — DECOR PASS ("10X the rooms", rated R, filled spaces):
   New shared decor kit in 3d-world.js (put/boxAt/cylAt/sphAt/wallSign/waterJet/dripper/
   cobweb/rat). Per room:
   - DEN: fireplace w/ animated fire + flickering glow light + mantel (climbable) +
@@ -184,11 +184,11 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
   3 new speakers (DRAIN THING, DJ BONES, SCARECROW). Verified per-room screenshots,
   zero console errors. PERF NOTE: ~300 new meshes, all shadow casters; if low phones
   chug, first lever is turning castShadow off on small decor.
-- DONE same day (pass 8) ‚Äî GAMEPLAY WAVE ("all of the above"):
+- DONE same day (pass 8) — GAMEPLAY WAVE ("all of the above"):
   - GIGGLE METER (the identity mechanic): fills from loud mic input (talkLevel) AND
     nearby funny events via 'gd-funny' CustomEvents (speaker bubbles, fish plaque,
     jack-in-the-box pop, witnessed kills +0.45). CLENCH button/C key drains it but
-    slows you to 60%. At full: forced laugh burst ‚Äî sb-laugh broadcast, everyone
+    slows you to 60%. At full: forced laugh burst — sb-laugh broadcast, everyone
     within 15m hears synth laugh, mouth flaps, the BASTARD gets a toast naming your
     room. Laugh counts feed round stats.
   - SABOTAGES (imposter, 45s shared cooldown, server-validated): LIGHTS OUT 25s
@@ -196,17 +196,17 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
     BURST PIPES 30s (flood puddles in kitchen/bath slow movement 45%), JAM DEN DOOR
     15s (plank + temp collider). Crew fixes at FUSES (basement west wall, new prop) or
     boiler VALVE via FIX button (sb-fix, server checks distance). Meetings end sabs.
-  - VENTS work (imposter): near any of the 3 vents ‚Üí VENT button ‚Üí pick destination ‚Üí
+  - VENTS work (imposter): near any of the 3 vents → VENT button → pick destination →
     teleport, 10s cooldown (client-enforced).
   - BODY DRAGGING (imposter): DRAG/DROP toggle near a corpse; body follows behind,
     synced via sb-drag (server range-checks); stuff bodies into hideables.
-  - GHOST HAUNTS: dead players get HAUNT (20s cd, server tracked) ‚Äî living players
+  - GHOST HAUNTS: dead players get HAUNT (20s cd, server tracked) — living players
     within 10m get a spook sound + shake + "something moved." toast.
-  - SECURITY CAMERAS work: near the basement desk ‚Üí CAMERAS ‚Üí view swaps between 3
+  - SECURITY CAMERAS work: near the basement desk → CAMERAS → view swaps between 3
     fixed vantages (DEN/HALL/YARD) w/ scanline overlay + CAM label; body stays at
     the desk (suspicious by design). NEXT/EXIT buttons.
   - HOUSE EVENTS (server interval 50-75s during rounds): monster SNORE (cover noise
-    toast + basement shake) and once per game the GNOME OMEN ‚Äî every gnome turns
+    toast + basement shake) and once per game the GNOME OMEN — every gnome turns
     toward the bastard's position for 2s (world.gnomeOmen). Cryptic tell.
   - SPRINT: shift / RUN button, 1.55x speed, stamina bar drains/regens (engine).
   - AWARDS on game over (server stats): THE BASTARD (kill count), CHORE CHAMPION,
@@ -214,13 +214,13 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
   - HAT SHOP ("THE HAT HOLE", walk phase): party cone 50 / traffic cone 75 / top hat
     100 / propeller 125 (spins) / halo 150 (hovers) / crown 200. Coins spend+persist
     (gd3_hats, gd3_hat), hats render on rigs' heads and sync via 3d-hat event.
-  - VERIFIED in pane: hat buy/equip/persist (60‚Üí10 coins), camera views + HUD,
+  - VERIFIED in pane: hat buy/equip/persist (60→10 coins), camera views + HUD,
     giggle meter fed by jack-in-the-box (0.24), crew sabotage REJECTED server-side,
     lights-out + flashlight visual, zero console/server errors.
   - NEEDS LIVE PLAYTEST (code paths follow validated patterns but weren't driven
     multi-client): vents, body drag sync, haunts, awards render, house events, laugh
     burst end-to-end with real mics.
-- DONE same day (pass 9) ‚Äî SOCIAL/CO-OP WAVE (all six of Mathew's asks):
+- DONE same day (pass 9) — SOCIAL/CO-OP WAVE (all six of Mathew's asks):
   1. TWO-PERSON HIDEYS + WHISPER: wardrobe/shed/hot-tub now cap:2 (two slots inX/inZ +
      in2X/in2Z; engine picks the free slot). 3d-voice.js: sharing a hidey = full-clear
      whisper only to your co-hider; muffled (0.25) to/from anyone hidden elsewhere.
@@ -233,12 +233,12 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
      chases nearest un-hidden living player, 1.3m chomp, LAUGHING lures it (12s, faster).
      Crew wins by finishing all chores; monster wins by eating everyone. Client
      buildWalkMonster() upright striding rig (3d-chars.js), interpolates mw-pos.
-     VERIFIED end-to-end solo: monster woke, pathed basement‚Üíme, ate me, co-op loss +
+     VERIFIED end-to-end solo: monster woke, pathed basement→me, ate me, co-op loss +
      awards fired.
   4. THE HEIST: carry skull/ham/crown (glowing, spin) to the den LOOT CHEST; hand-offs,
      visible on carrier's back, dropped where a carrier dies; 3 delivered = crew win,
      bastard hunts carriers. Server hs-grab/hs-deliver/hs-drop/hs-score (range-checked).
-     VERIFIED w/ 2 bots: grabbed skull in crypt, carried to den, delivered ‚Üí bar 1/3.
+     VERIFIED w/ 2 bots: grabbed skull in crypt, carried to den, delivered → bar 1/3.
   5. THE SNUG: secret room behind the den bookshelf (wall gap at den +x z[-2.2,-1.0]),
      stone room w/ bench, candles, warm light, "members only" sign. Always enterable.
   6. HOUSE LEVELS (shared progression per house code): houseXP earns from chores(+2),
@@ -252,7 +252,7 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
   new decor (fountain visible through doorway), zero console/server errors.
   NEEDS LIVE PLAYTEST: whisper audio (mic-gated in pane), duo chores w/ 2 humans,
   full heist win, house level-up crossing a threshold, hot tub unlock.
-- DONE same day (pass 10) ‚Äî CHAOS & COMEDY wave (making the rated-R stuff DYNAMIC):
+- DONE same day (pass 10) — CHAOS & COMEDY wave (making the rated-R stuff DYNAMIC):
   - HOUSE CHAOS EVENTS now fire every ~22-40s during any round (was 50-75s, snore-only):
     FART (picks a random living player, spawns a green cloud + floor ping-ring AT their
     spot = loud wet location reveal, nearby giggle spike, crude toast "SOMEBODY RIPPED
@@ -273,19 +273,19 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
     latency keeps missing them, but the code path is confirmed (giggle spike + no errors).
   NEEDS LIVE PLAYTEST: the timed chaos events landing mid-round with humans, emote
   bubbles over other players, disco/quake feel.
-- DONE same day (pass 11) ‚Äî MAP: toggle-able floorplan overlay (MAP button top-center
+- DONE same day (pass 11) — MAP: toggle-able floorplan overlay (MAP button top-center
   + M key), canvas-drawn in 3d-game.js from world.rooms. Shows all 8 rooms to correct
   scale/position + labels, a live cyan "you are here" dot w/ facing wedge, orange
-  diamond markers on YOUR chore rooms (labeled, ¬∑2 suffix for duo chores), and the
+  diamond markers on YOUR chore rooms (labeled, ·2 suffix for duo chores), and the
   heist CHEST marker in heist mode. DELIBERATELY shows NO other players / monster /
-  killer ‚Äî legend says "nobody else is on this map. trust no one." (a live position
+  killer — legend says "nobody else is on this map. trust no one." (a live position
   tracker would kill the tension in every mode; task-locator only, Among-Us style).
   Auto-closes on meeting/round-end/reset. VERIFIED in browser: full floorplan renders,
   you-are-here dot correct in the DEN, zero console errors. Task markers draw from
   myTasks during a round (unscreenshotted but same data proven in prior passes).
 - NOT YET: classic hide-and-seek (mic-laugh-to-die) variant, ghost chore,
   group photo at awards, name uniqueness.
-- DONE 2026-07-23 (pass 12) ‚Äî THE HOUSE GREW: 3 FLOORS, 15 ROOMS ("make the map
+- DONE 2026-07-23 (pass 12) — THE HOUSE GREW: 3 FLOORS, 15 ROOMS ("make the map
   larger and multiple levels"):
   - ENGINE (3d.js): colliders now carry optional `base` (bottom) so upper-story
     geometry ignores the floor below; blocks()/groundAt() are y-aware; STEP=0.42
@@ -310,7 +310,7 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
     telescope, animated orrery, orb pedestal, THE TELESCOPE speaker).
     ATTIC at y=7.4 over the west wing: rafters, labeled box stacks (climbable),
     2 tracking mannequins + THE WALKER (creeps closer only while unwatched,
-    shuffles home when you leave ‚Äî uses GD3.P.yaw), sheet ghost, self-rocking
+    shuffles home when you leave — uses GD3.P.yaw), sheet ghost, self-rocking
     chair, STEAMER TRUNK crouch hidey, leaning paintings, THE MANNEQUINS
     speaker. GRAND STAIRCASE in the hall SW corner (solid flight, brass
     banister, guarded stairwell w/ balusters, 6-candle chandelier w/ sway +
@@ -326,7 +326,7 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
     stars=ALIGN THE STARS seq, sheets=FOLD THE ANGRY SHEETS mash) w/ station
     y + y-gated proximity; 4th vent GAME ROOM (vents teleport sets y); 4th
     security cam LANDING; multi-floor MAP: GROUND/UPSTAIRS/ATTIC tabs,
-    auto-opens on your floor, ‚ñ≤‚ñº stair markers, chore markers per floor,
+    auto-opens on your floor, ▲▼ stair markers, chore markers per floor,
     you-dot solid on your floor / hollow "(above)/(below)" otherwise; bodies
     spawn/drag/report at correct y; fart clouds/ping rings/emote bubbles at y;
     heist orb mesh (glowing blue) + baseY item handling + total from server;
@@ -335,7 +335,7 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
     flat (scale .28) for peers hidden in underbed/trunk.
   - SERVER (server.js): d3() helper; 3D range checks on kill/report/drag/grab;
     deliver/button/fix/duo-helper require ground (y<1.5); bodies + kills +
-    laughs + haunts + emotes + fart events + drops carry y; y clamp 0‚Üí11;
+    laughs + haunts + emotes + fart events + drops carry y; y clamp 0→11;
     SB_TASKS += 6 new ids; HS_ITEMS[orb]=[12.5,2.2,3.7], heist total =
     item count (4), hs-score sends total; MONSTER can't climb: ignores
     targets/chomps above y 1.8, upstairs laughs don't lure ("he waits").
@@ -343,9 +343,9 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
     muffle, 520Hz lowpass).
   - 3d.html: objective text now "SNOOP ALL 15 ROOMS. YES, FIFTEEN NOW."
   - VERIFIED (pane, freeze-teleport + screenshots, zero console/server
-    errors): all 7 new rooms toured; WALKED the grand stairs bottom‚Üítop
-    (y profile exact) and master‚Üíattic flight (arrived THE ATTIC, snoop
-    counter 8/15‚Üíticking); under-bed hide (floor-slit crouch view + THE BED
+    errors): all 7 new rooms toured; WALKED the grand stairs bottom→top
+    (y profile exact) and master→attic flight (arrived THE ATTIC, snoop
+    counter 8/15→ticking); under-bed hide (floor-slit crouch view + THE BED
     line fired); multi-floor map w/ correct dot/stairs; mannequins already
     face you on arrival. Bot test (scratchpad gd-orb-test.js): ground grab
     under orb REJECTED, upstairs grab OK, deliver-from-above REJECTED,
@@ -357,27 +357,27 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
     (in MASTER ceiling + attic floor). Slabs are per-room; cut new holes by
     splitting the floorRect+slab pair, never by deleting a whole room slab.
     First attic-stair placement (landing west end) DEADLOCKED the landing NW
-    corner against the grand-stair exit ‚Äî that's why the attic stairs live in
+    corner against the grand-stair exit — that's why the attic stairs live in
     the bedroom. Check exit paths against BOTH stair footprints before moving
     either.
 
-- DONE 2026-07-23 (pass 13) ‚Äî THE JUICE PASS ("improve graphics + gameplay feeling,
+- DONE 2026-07-23 (pass 13) — THE JUICE PASS ("improve graphics + gameplay feeling,
   do all of the above"):
   - GRAPHICS:
     - BLOOM: vendored three postprocessing (public/lib/postprocessing/ +
-      public/lib/shaders/, three upgraded r180‚Üí0.185.1 ‚Äî BOTH lib builds
-      replaced). Composer chain RenderPass‚ÜíUnrealBloomPass(480px, str .5,
-      thresh .8)‚ÜíOutputPass in 3d.js. Every emissive glows (moon, neon,
+      public/lib/shaders/, three upgraded r180→0.185.1 — BOTH lib builds
+      replaced). Composer chain RenderPass→UnrealBloomPass(480px, str .5,
+      thresh .8)→OutputPass in 3d.js. Every emissive glows (moon, neon,
       arcade screens, monster eyes, orrery sun, chandelier flames).
-    - POTATO MODE: fps sampled after 8s; under 42fps ‚Üí bloom off + pixelRatio
+    - POTATO MODE: fps sampled after 8s; under 42fps → bloom off + pixelRatio
       1.25 + a toast. One-way, per-session.
     - NORMAL MAPS: Sobel over each procedural texture's own luminance,
-      cached per source (normalFor() in 3d-world.js), wired into mat() ‚Äî
+      cached per source (normalFor() in 3d-world.js), wired into mat() —
       walls/floors catch the roaming light dimensionally.
-    - CONTACT SHADOWS: blobUnder() in put() ‚Äî bbox-fitted radial-gradient
+    - CONTACT SHADOWS: blobUnder() in put() — bbox-fitted radial-gradient
       blob under every prop whose bottom sits within 0.14 of a floor
       (0/3.7/7.4). Peer rigs get one in 3d-net (rigBlob()).
-    - MOON GOBOS: SpotLight w/ 4-pane cookie at every moonWindow() ‚Äî
+    - MOON GOBOS: SpotLight w/ 4-pane cookie at every moonWindow() —
       real moonlight patches on the floorboards.
     - PER-ROOM FOG: ROOM_FOG table in 3d.js, color+density crossfade
       (kitchen sickly green, nursery cold blue, attic chewable dust...).
@@ -390,32 +390,32 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
       same-floor steps positional, below-floor muffled thuds. A whole new
       information layer for social deduction.
     - MOVEMENT: velocity inertia (accel 13/decel 17), landing camera dip +
-      thump sfx + vibration scaled by fall speed, sprint FOV kick (72‚Üí78),
+      thump sfx + vibration scaled by fall speed, sprint FOV kick (72→78),
       strafe camera roll, footstep cadence follows real speed.
-    - AUDIO BUS: 3d-sfx.js rebuilt ‚Äî master‚Üídry+convolver(generated 1.4s IR),
+    - AUDIO BUS: 3d-sfx.js rebuilt — master→dry+convolver(generated 1.4s IR),
       per-room wetness (sfx.setVerb, ROOM_VERB in 3d.js); ROOM-TONE AMBIENCE
       loops (basement hum, crypt/observatory drone, attic/yard wind, nursery
       self-playing music box, default house breath) crossfaded via
       sfx.ambience() every frame.
     - GIGGLE SCREEN FX: GD3.giggleFx (set by 3d-game) wobbles camera roll+
       pitch above 0.6, snorts above 0.75.
-    - DOORS: 8 hinged creaky leaves (hall‚Üínursery/kitchen/bath, den‚Üíbasement,
-      landing‚Üímaster/library/trophy, game‚Üîobservatory). Swing open for anyone
-      near (self + peers via GD3.net.peers), rest ajar, no colliders ever ‚Äî
+    - DOORS: 8 hinged creaky leaves (hall→nursery/kitchen/bath, den→basement,
+      landing→master/library/trophy, game↔observatory). Swing open for anyone
+      near (self + peers via GD3.net.peers), rest ajar, no colliders ever —
       pure sightline+sound. doorCreak/doorShut sfx w/ distance volume.
     - KILL JUICE: white flash frame (dist-scaled), killer lunge shake +
       haptic, feather burst + exactly one tooth at the kill spot, victim
       big flash + vibration pattern; chore-complete haptic.
     - BODY PHYSICS: corpses spawn with knockback velocity + spin; client sim
       (simBodies in 3d-game) with gravity, wall bounce, bounce-per-step
-      thumps ‚Äî bodies ROLL DOWN THE STAIRS. Sim stops on drag/sb-drag or
+      thumps — bodies ROLL DOWN THE STAIRS. Sim stops on drag/sb-drag or
       after 4.2s (wall-clock: in the rAF-starved pane a body can freeze
-      mid-air ‚Äî real browsers are fine).
+      mid-air — real browsers are fine).
     - HE LEARNED THE STAIRS: MW graph got [x,z,y] nodes (stairB/stairT +
       6 upstairs rooms + door nodes), monster y interpolates along paths,
       chomp is |dy|<1.6. Gated on house level >= MW_STAIR_LEVEL (5; env
       GD_STAIR_LVL overrides for testing). Round-start announcement
-      sb-event {kind:'stairs'} ‚Üí "HE LEARNED THE STAIRS." toast + sting.
+      sb-event {kind:'stairs'} → "HE LEARNED THE STAIRS." toast + sting.
       Attic (y>5.5) remains his blind spot; laugh-lure works on any floor
       he can reach. Upstairs laughs don't lure a stair-less monster.
   - VERIFIED (pane, zero console/server errors): door swings open on
@@ -423,31 +423,31 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
     catch light, gobo moonlight grid on master floorboards, bloom on moon/
     sconces/monster eyes, upstairs chores dealt into rounds (MAKE THE BED /
     POLISH THE ELK / RESHELVE THE LIES on HUD). Bot-verified: staircase
-    kill spawns tumbling body (gd-tumble-test.js ‚Äî browser host emitStart,
+    kill spawns tumbling body (gd-tumble-test.js — browser host emitStart,
     bots kill mid-flight); monster stair test on :3117 w/ GD_STAIR_LVL=1
     (gd-monster-stairs-test.js): stairs toast fired, mw-pos y hit 3.70,
-    bot eaten upstairs ‚Äî all PASS.
+    bot eaten upstairs — all PASS.
   - NEEDS LIVE PLAYTEST (audio is pane-blind): footstep/creak mix levels,
     ceiling-creak volume curve, ambience loudness, reverb wetness, door
     creak spam in crowded lobbies, giggle wobble intensity, bloom strength
     on real phones (potato mode should catch weak ones).
   - PERF NOTE: +4 gobo spotlights joined the forward-light loop and normal
-    maps double texture samplers ‚Äî if real phones chug even in potato mode,
+    maps double texture samplers — if real phones chug even in potato mode,
     next levers: drop gobo spots to 2, normalScale 0 on walls (keep floors),
     merge static room geometry (never attempted, big refactor).
 
-- DONE 2026-07-24 (pass 14) ‚Äî LAUNCH-READINESS PASS (Mathew: "do all of these",
+- DONE 2026-07-24 (pass 14) — LAUNCH-READINESS PASS (Mathew: "do all of these",
   items 4-10 of the improvement list):
   - FRONT DOOR: `/` now serves 3d.html, `/classic` serves the 2D game
     (routes in server.js before static). 2D home got a big "ENTER THE 3D
     GIGGLEHOUSE" button; 3D join card links to /classic.
-  - RELIABILITY: socket.io connectionStateRecovery (90s) ‚Äî a locked phone
+  - RELIABILITY: socket.io connectionStateRecovery (90s) — a locked phone
     resumes with the same socket id; connection-handler restores code3d from
     socket.data and cancels the pending removal. Disconnects now get a GRACE
     WINDOW (45s mid-round / 8s walkabout) via pending3d + removePlayer3d()
     instead of instant attrition. Client shows RECONNECTING overlay; expired
-    sessions reload clean. DUPLICATE NAMES get ¬∑2/¬∑3 suffixes (bot-verified:
-    BLOB + BLOB¬∑2). HOUSE XP persists to housexp.json (debounced write,
+    sessions reload clean. DUPLICATE NAMES get ·2/·3 suffixes (bot-verified:
+    BLOB + BLOB·2). HOUSE XP persists to housexp.json (debounced write,
     gitignored; survives restarts, not redeploys).
   - STEREO PANNING: tone()/noise() take pan; sfx.listener fed by the engine
     each frame + sfx.panTo(x,z) (right vector = (cos yaw, -sin yaw)). Panned:
@@ -457,16 +457,16 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
   - ROUND VARIETY: heist items each have 3 candidate spawn spots (random per
     round); chore pool = random 10 of 16 per night; TONIGHT'S HOUSE RULE in
     sb-begin (3/8 nights normal): PEA SOUP (fog x2), ZOOMIES (speed 1.15),
-    CREAKY BONES (creak x4), BLOOD MOON (dim red hemi), PAYDAY (coins x2) ‚Äî
+    CREAKY BONES (creak x4), BLOOD MOON (dim red hemi), PAYDAY (coins x2) —
     client applies via GD3.fogMult/speedMult/creakMult/bloodmoon + award()
     doubling; toast announces; resetAll clears. Verified live: CREAKY BONES
     toast delivered to all clients.
   - MURDER MAP: server samples villain (imposter or monster) pos every 2s
     into g.recap.path (cap 400) + kill spots; ships in sb-over. Client
     drawRecap() renders GROUND + UPSTAIRS mini floorplans under the awards:
-    red route, ‚úï kills, ‚óè start (attic events fold into the upstairs panel).
+    red route, ✕ kills, ● start (attic events fold into the upstairs panel).
     BUG FIXED during verify: drawRecap must run AFTER the awards render
-    (sbAwards is created lazily) ‚Äî call sits at the END of the sb-over
+    (sbAwards is created lazily) — call sits at the END of the sb-over
     handler now. Verified on-screen with a real round.
   - GHOST AFTERLIFE: dead crew keep their chore list and their completions
     COUNT (server drops the alive check on sb-task-done; imposter still
@@ -475,7 +475,7 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
     sb-spook relay, dead only): FLICKER THE LIGHTS (house-wide 500ms),
     COLD SPOT (9m spook+shake+toast), SLAM A DOOR (world.slamDoor whips the
     nearest door open then bangs it shut). MANNEQUIN POSSESSION: dead player
-    near an attic mannequin gets POSSESS ‚Äî camera into the mannequin (own
+    near an attic mannequin gets POSSESS — camera into the mannequin (own
     mesh hidden locally), slow clamped-to-attic movement, `pm` field on
     3d-pos relays it; other clients drive world.mannequins[pm] from the
     ghost's position (tracking ticker skips possessed ones). All verified:
@@ -493,52 +493,52 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
     reverb feel, possession scare factor with real victims, house-rule
     balance, ghost chore etiquette.
 
-- DONE 2026-07-24 (pass 15) ‚Äî THE BEAUTY PASS (all 9 approved items, both stages,
+- DONE 2026-07-24 (pass 15) — THE BEAUTY PASS (all 9 approved items, both stages,
   everything verified on-screen with zero console/server errors):
   - STAGE A (rendering/materials):
-    1. MSAA REGRESSION FIXED: composer now gets a multisampled target ‚Äî
+    1. MSAA REGRESSION FIXED: composer now gets a multisampled target —
        `new THREE.WebGLRenderTarget(1, 1, { samples: 4, type: THREE.HalfFloatType })`
        then `composer.setSize(...)` right after construction (constructor treats a
-       passed target's dims as logical px ‚Äî build at 1x1 and size it properly).
+       passed target's dims as logical px — build at 1x1 and size it properly).
        EffectComposer.setSize preserves `samples`, so resize is safe. POTATO path:
        samples=0 on BOTH renderTargets + `.dispose()` (forces FBO rebuild without
        MSAA), `composer.setPixelRatio(1.25 cap)` so the internal buffers actually
        shrink (they never did before), and `world.potato()` (see item 7). Verified
-       live: samples 4 on both buffers, runtime 0‚Üî4 A/B toggle renders clean.
+       live: samples 4 on both buffers, runtime 0↔4 A/B toggle renders clean.
     2. ROUGHNESS MAPS: roughFor(srcTex) in 3d-world.js, cached per source like
-       normalFor ‚Äî wear = inverse luminance (bright worn wood goes shiny) + 7
+       normalFor — wear = inverse luminance (bright worn wood goes shiny) + 7
        large radial blotches (55% shiny scuffs / 45% matte dust). Wired into mat()
        as material.roughnessMap (roughness stays the multiplier; GREEN channel is
-       what three samples). plankTex got a size param (default 1024 ‚Äî den/pale/
+       what three samples). plankTex got a size param (default 1024 — den/pale/
        hall/attic floors), checkerTex + bathTileTex bumped to 1024. Floors now
        show worn shiny paths under the roaming light.
     3. FAKE AO SKIRTS in facePiece(): every floor-touching span gets a 0.55m
        gradient strip lying on the floor (dark edge at the wall) and every
        ceiling-reaching span (lintels too) gets a 0.42m corner strip. One shared
-       16x64 gradient tex, renderOrder 1, depthWrite false ‚Äî blob-shadow pattern.
+       16x64 gradient tex, renderOrder 1, depthWrite false — blob-shadow pattern.
        IMPORTANT: strips are added AFTER facePiece's shadow traverse so they never
        cast/receive (a transparent plane casting a solid shadow is a bad time).
     4. GEOMETRY DIGNITY: vendored lib/geometries/RoundedBoxGeometry.js (imports
-       'three' ‚Äî the 3d.html importmap resolves it; SHIP LIST GREW, re-upload the
+       'three' — the 3d.html importmap resolves it; SHIP LIST GREW, re-upload the
        whole lib/ folder). rbox(w,h,d,r) helper clamps radius to 45% of the
        smallest dim; rboxAt() joins boxAt. ~27 meshes swapped: sofa (6 pieces),
        fridge door, both lying coffins, upright-coffin lid, wardrobe doors,
        grandfather-clock body, prep-table top, steamer trunk body+lid, four-poster
        (deck/mattress/pillows/breathing lump), billiards felt+frame, both arcade
        cabinets. CROWN MOLDING (rounded strip 0.1x0.14 at H-0.08) rings den, hall,
-       landing, master ‚Äî hall runs skip the grand-stair void (west of x -8.5 /
+       landing, master — hall runs skip the grand-stair void (west of x -8.5 /
        south of z -6.7), master's east wall splits around the attic hatch.
     5. COLOR GRADE: gradePass (ShaderPass, uniforms contrast/saturation/tint)
        between bloom and OutputPass. ROOM_GRADE table lerped in tick exactly like
        ROOM_FOG (kitchen grease-green desat, attic sepia, crypt oversaturated,
        basement crushed amber...). BLOOD MOON now goes through the grade
        (BLOOD_GRADE [1.16, .62, 0xff9a86]); the old red hemi hack was replaced
-       with a neutral dim (0x565055) ‚Äî red comes from the grade. GD3.grade +
+       with a neutral dim (0x565055) — red comes from the grade. GD3.grade +
        GD3.composer exposed for debugging. Verified: uniforms lerp per room on
        screen, blood moon A/B screenshotted.
   - STAGE B (life + UI):
     6. REACTIVE FACES: buildPlayerRig keeps refs now (R.brows w/ baseline pos/rot
-       in userData, eye.userData.lid replaces the old scale-memory hack ‚Äî slurp
+       in userData, eye.userData.lid replaces the old scale-memory hack — slurp
        lids survive expressions). animateRig reads R.fear (0..1), R.talk (0..3),
        R.dead: fear pops eye scale +50% / raises+flattens brows / shrinks pupils;
        talk narrows pupils; dead = half-lidded eyes, drooped sad brows, dull
@@ -553,19 +553,19 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
        the arcade cabinets. HERO SHADOWS: heroShadow() upgraded the existing den
        fireplace fglow + stairwell chLight to castShadow w/ 512 maps (crate
        stacks throw real dancing shadows now). Refs live in world.heroLights;
-       world.potato() strips castShadow at runtime ‚Äî 3d.js potato calls it.
-    8. WINDOW PARALLAX: moonWindow() rebuilt ‚Äî four stacked layers (starsOnly
+       world.potato() strips castShadow at runtime — 3d.js potato calls it.
+    8. WINDOW PARALLAX: moonWindow() rebuilt — four stacked layers (starsOnly
        opaque at z-0.06, moon disc -0.048, drifting clouds -0.036 w/ slow
        UV-scroll, bare recursive-branch tree -0.022) whose texture offsets slide
-       with the viewer (ticker: window-local eye pos, gains .02/.07/.11/.2 ‚Äî
+       with the viewer (ticker: window-local eye pos, gains .02/.07/.11/.2 —
        tree moves most). Clamp wrapping on moon/tree, repeat on stars/clouds.
        Applies to all 4 upstairs windows AND the den west window (old flat-glass
        den window block replaced; its moonWindow call lives with the upstairs
-       calls because darkM doesn't exist yet at the old site ‚Äî TDZ). Verified:
+       calls because darkM doesn't exist yet at the old site — TDZ). Verified:
        two-angle A/B shows moon sliding behind the frame bar, tree shifting
        independently.
     9. UI SKIN: public/fonts/SpecialElite.woff2 vendored (OFL, 61KB, no CDN;
-       SHIP LIST GREW ‚Äî new fonts/ folder). @font-face in 3d.html; Special Elite
+       SHIP LIST GREW — new fonts/ folder). @font-face in 3d.html; Special Elite
        on the HUD title, objective bar, speaker bubbles, join-card h1, ENTER
        button, role banner, game-over banner, meeting h2, map h3, START ROUND.
        Wood-gradient + brass-border + inset-highlight treatment on .gdCtl, .sbBtn,
@@ -573,7 +573,7 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
        MURDER MAP draw on parchment() (mottled stains + scorched edge vignette)
        with re-inked colors (ink-brown rooms/labels, teal you-dot, dried-blood
        route/kill marks). Verified on-screen.
-  - VERIFIED on :3057 (another session's server squatted :3007 ‚Äî added a
+  - VERIFIED on :3057 (another session's server squatted :3007 — added a
     "giggledoom-3057" launch.json config in the concierge project: env PORT=3057).
     Full screenshot tour, MSAA A/B, blood-moon A/B, parallax A/B, parchment map,
     bot face test. Zero console/server errors throughout.
@@ -581,25 +581,25 @@ Later: add a "3D BETA" button in the 2D lobby linking to /3d.html.
     flame-sprite density taste check, parallax feel while walking (pane can't
     walk), Special Elite readability on small screens, fear-face visibility in
     real kill chaos.
-DECIDED AGAINST (for now): full toon-shader/outline rebrand ‚Äî revisit only after
+DECIDED AGAINST (for now): full toon-shader/outline rebrand — revisit only after
    real playtests.
 
-## SHIP LIST ‚Äî Mathew uploads to GitHub (web upload), Render auto-deploys ~3min
-1. `server.js` ‚Üí repo ROOT (solo explore + taunt fix + 3D walkabout events)
-2. `public/client.js` ‚Üí INTO public/ (solo explore client)
+## SHIP LIST — Mathew uploads to GitHub (web upload), Render auto-deploys ~3min
+1. `server.js` → repo ROOT (solo explore + taunt fix + 3D walkabout events)
+2. `public/client.js` → INTO public/ (solo explore client)
 3. `public/3d.html`, `public/3d.js`, `public/3d-world.js`, `public/3d-chars.js`,
-   `public/3d-net.js`, `public/3d-voice.js`, `public/3d-game.js`, `public/3d-sfx.js` ‚Üí INTO public/
-4. `public/lib/` ‚Üí INTO public/ (drag the WHOLE lib folder; the GitHub uploader keeps
+   `public/3d-net.js`, `public/3d-voice.js`, `public/3d-game.js`, `public/3d-sfx.js` → INTO public/
+4. `public/lib/` → INTO public/ (drag the WHOLE lib folder; the GitHub uploader keeps
    folder structure). AS OF PASS 13 lib is BIGGER: both `three*.min.js` files were
    REPLACED (upgraded to 0.185.1) and there are two NEW subfolders,
-   `lib/postprocessing/` (7 files) and `lib/shaders/` (3 files) ‚Äî bloom dies without
+   `lib/postprocessing/` (7 files) and `lib/shaders/` (3 files) — bloom dies without
    them and the page won't boot (import errors). AS OF PASS 15 there is a THIRD new
-   subfolder, `lib/geometries/` (RoundedBoxGeometry.js) ‚Äî the world won't build
+   subfolder, `lib/geometries/` (RoundedBoxGeometry.js) — the world won't build
    without it. Re-upload the whole folder.
-5. `public/fonts/` ‚Üí INTO public/ (NEW IN PASS 15: SpecialElite.woff2 ‚Äî the UI face;
+5. `public/fonts/` → INTO public/ (NEW IN PASS 15: SpecialElite.woff2 — the UI face;
    page still works without it, just falls back to Courier).
 Then the 3D beta is live at giggledoom.onrender.com/3d.html (unlinked page).
-package.json now lists `three` as a dep ‚Äî NOT needed by the server; uploading it is
+package.json now lists `three` as a dep — NOT needed by the server; uploading it is
 optional/harmless.
 
 ## Next 3D milestones (port order proposal)
@@ -613,12 +613,12 @@ optional/harmless.
 
 ## Gotchas for a fresh session
 - Browser pane STARVES requestAnimationFrame: frames only advance during screenshot
-  captures. Movement/timers look frozen ‚Äî NOT a game bug; real browsers are fine.
+  captures. Movement/timers look frozen — NOT a game bug; real browsers are fine.
   Drive tests via window.GD3 teleports + repeated screenshots.
 - Pane blocks mic (2D game): `G.mic.ok=true; updateMicGate()` bypass.
 - Local server: launch.json config "giggledoom" (or `node ~/Desktop/giggledoom/server.js`).
   A STALE node process from a crashed session can squat :3007 AND carry a macOS TCC
-  file-permission block (EPERM on every request ‚Üí 500s). Fix: kill it, start fresh.
+  file-permission block (EPERM on every request → 500s). Fix: kill it, start fresh.
 - GitHub upload: frontend files must go INSIDE the public folder (repo root copies
   of old files still sit there; harmless, pending cleanup).
-- sh() in art.js must return HEX (rgb() strings break rgba()) ‚Äî 2D game only.
+- sh() in art.js must return HEX (rgb() strings break rgba()) — 2D game only.
