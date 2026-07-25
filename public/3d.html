@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>GIGGLEDOOM 3D ‚Äî proof of concept</title>
+<style>
+  @font-face { font-family:'Special Elite'; src:url('fonts/SpecialElite.woff2') format('woff2'); font-display:swap; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { width:100%; height:100%; overflow:hidden; background:#05040a; font-family:'Courier New',monospace; }
+  #game { width:100%; height:100%; display:block; touch-action:none; }
+  .hud { position:fixed; color:#e8dcc8; text-shadow:0 2px 6px #000; pointer-events:none; z-index:10; }
+  #tag3d { top:max(10px, env(safe-area-inset-top)); left:12px; font-size:14px; letter-spacing:2px; opacity:.9;
+           font-family:'Special Elite','Courier New',monospace; }
+  #tag3d b { color:#ffb34d; }
+  #snoop { top:calc(max(10px, env(safe-area-inset-top)) + 22px); left:12px; font-size:10px; letter-spacing:2px; color:#c9a24a; opacity:.85; }
+  #beta { top:max(10px, env(safe-area-inset-top)); right:12px; font-size:10px; letter-spacing:2px;
+          background:#3a1010; border:1px solid #8a2b2b; color:#ff9a9a; padding:4px 8px; border-radius:4px; }
+  #obj { left:50%; bottom:max(18px, env(safe-area-inset-bottom)); transform:translateX(-50%);
+         font-size:12px; letter-spacing:3px; color:#ffd28a;
+         font-family:'Special Elite','Courier New',monospace;
+         background:linear-gradient(180deg, rgba(30,19,9,.82), rgba(14,9,4,.82));
+         border:1px solid #8a6a2a; box-shadow:inset 0 1px 0 rgba(255,200,120,.14), 0 3px 8px rgba(0,0,0,.5);
+         padding:8px 14px; border-radius:4px; white-space:nowrap; }
+  #hint { left:50%; bottom:max(58px, calc(env(safe-area-inset-bottom) + 44px)); transform:translateX(-50%);
+          font-size:10px; letter-spacing:1px; opacity:.55; white-space:nowrap; }
+  #bubble { display:none; max-width:220px; font-size:12px; color:#111; background:#f5efdc; border:2px solid #111;
+            border-radius:10px; padding:7px 10px; transform:translate(-50%,-100%); text-align:center; z-index:11;
+            font-family:'Special Elite','Courier New',monospace; }
+  #stickBase { display:none; position:fixed; width:110px; height:110px; border-radius:50%;
+               border:2px solid rgba(255,255,255,.25); background:rgba(255,255,255,.06); z-index:9; pointer-events:none; }
+  #stickKnob { position:absolute; left:50%; top:50%; width:46px; height:46px; border-radius:50%;
+               background:rgba(255,255,255,.25); transform:translate(-50%,-50%); }
+  @media (max-width:600px) {
+    #beta { top:calc(max(10px, env(safe-area-inset-top)) + 26px); }
+    #obj { white-space:normal; max-width:92vw; font-size:11px; text-align:center; }
+    #hint { white-space:normal; max-width:92vw; text-align:center; }
+  }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div class="hud" id="tag3d"><b>GIGGLEDOOM 3D</b> ¬∑ <span id="roomName">THE DEN</span></div>
+<div class="hud" id="beta">3D BETA</div>
+<div class="hud" id="snoop">SNOOPED 1/15</div>
+<div class="hud" id="obj">OBJECTIVE: SNOOP ALL 15 ROOMS. YES, FIFTEEN NOW.</div>
+<div class="hud" id="hint">WASD move ¬∑ drag to look ¬∑ phone: left thumb move, right thumb look</div>
+<div class="hud" id="bubble"></div>
+<div id="stickBase"><div id="stickKnob"></div></div>
+<script src="/socket.io/socket.io.js"></script>
+<script type="importmap">
+{ "imports": { "three": "./lib/three.module.min.js" } }
+</script>
+<script type="module" src="3d.js"></script>
+</body>
+</html>

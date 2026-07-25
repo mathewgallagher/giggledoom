@@ -3,18 +3,18 @@
 
 // ---------- constants ----------
 const CHARS = {
-  zoomy:    { name: 'ZOOMY',       emoji: '🐇', speed: 4.2, size: 24, stepMs: 900,
+  zoomy:    { name: 'ZOOMY',       emoji: 'üêá', speed: 4.2, size: 24, stepMs: 900,
               blurb: 'Fast as hell. Loud as hell. Those are clown shoes.',
-              stat: 'SPEED 5/5 · STEALTH 1/5 · footsteps ping the monster' },
-  slurp:    { name: 'BIG SLURP',   emoji: '🐖', speed: 2.4, size: 42, stepMs: 0,
+              stat: 'SPEED 5/5 ¬∑ STEALTH 1/5 ¬∑ footsteps ping the monster' },
+  slurp:    { name: 'BIG SLURP',   emoji: 'üêñ', speed: 2.4, size: 42, stepMs: 0,
               blurb: 'Completely silent. Completely spherical. A gentleman.',
-              stat: 'SPEED 1/5 · STEALTH 4/5 · hiding spots visibly jiggle' },
-  gremlin:  { name: 'LIL GREMLIN', emoji: '👺', speed: 3.1, size: 16, stepMs: 2500,
+              stat: 'SPEED 1/5 ¬∑ STEALTH 4/5 ¬∑ hiding spots visibly jiggle' },
+  gremlin:  { name: 'LIL GREMLIN', emoji: 'üë∫', speed: 3.1, size: 16, stepMs: 2500,
               blurb: 'Knee-height menace. Fits in spots nobody else can.',
-              stat: 'SPEED 3/5 · STEALTH 3/5 · squeaky decoy + tiny spots' },
-  wallfish: { name: 'WALLFISH',    emoji: '🦑', speed: 2.9, size: 26, stepMs: 2500,
+              stat: 'SPEED 3/5 ¬∑ STEALTH 3/5 ¬∑ squeaky decoy + tiny spots' },
+  wallfish: { name: 'WALLFISH',    emoji: 'ü¶ë', speed: 2.9, size: 26, stepMs: 2500,
               blurb: 'Sticks to walls, physically and morally.',
-              stat: 'SPEED 2/5 · STEALTH 5/5 · hold still on a wall = near invisible' },
+              stat: 'SPEED 2/5 ¬∑ STEALTH 5/5 ¬∑ hold still on a wall = near invisible' },
 };
 const SEEKER = { speed: 3.6, size: 46 };
 // base body colours for the hand-drawn creatures (skins recolour these)
@@ -39,94 +39,109 @@ const WALLS = [
 ];
 // short = compass tag. wall/floor/ceil = per-room colours so each room reads distinct in first person.
 const ROOMS = [
-  { name: 'THE KITCHEN',                   short: 'KITCHEN',  x: 30,   y: 30,  w: 800, h: 820, tint: '#241a1a', wall: '#6e5138', floor: '#2b211a', ceil: '#171012' },
-  { name: 'THE LIVING ROOM',               short: 'LIVING',   x: 860,  y: 30,  w: 910, h: 820, tint: '#20182c', wall: '#6a4a86', floor: '#241a30', ceil: '#140f1c' },
-  { name: 'THE BEDROOM (LOCK THE DOOR)',   short: 'BEDROOM',  x: 1800, y: 30,  w: 770, h: 820, tint: '#2a1526', wall: '#9c4f7a', floor: '#2c1826', ceil: '#180d16' },
-  { name: "THE GARAGE (DAD'S LAIR)",       short: 'GARAGE',   x: 30,   y: 880, w: 800, h: 890, tint: '#16181e', wall: '#465066', floor: '#1c2028', ceil: '#0e1014' },
-  { name: 'THE BASEMENT (SUS)',            x: 860,  y: 880, w: 640, h: 890, short: 'BASEMENT', tint: '#141018', wall: '#3d3550', floor: '#17131e', ceil: '#0b090f' },
-  { name: 'THE BATHROOM (COURTESY FLUSH)', short: 'BATHROOM', x: 1530, y: 880, w: 470, h: 890, tint: '#141e26', wall: '#3f7f96', floor: '#182630', ceil: '#0c161c' },
-  { name: 'THE BACKYARD (HOA APPROVED)',   short: 'BACKYARD', x: 2030, y: 880, w: 540, h: 890, tint: '#14261a', wall: '#3c6b45', floor: '#16281c', ceil: '#0a1810' },
+  { name: 'THE KITCHEN',                   short: 'KITCHEN',  x: 30,   y: 30,  w: 800, h: 820, tint: '#241a1a', wall: '#6e5138', floor: '#2b211a', ceil: '#171012', fk: 'tile' },
+  { name: 'THE LIVING ROOM',               short: 'LIVING',   x: 860,  y: 30,  w: 910, h: 820, tint: '#20182c', wall: '#6a4a86', floor: '#241a30', ceil: '#140f1c', fk: 'wood' },
+  { name: 'THE BEDROOM (LOCK THE DOOR)',   short: 'BEDROOM',  x: 1800, y: 30,  w: 770, h: 820, tint: '#2a1526', wall: '#9c4f7a', floor: '#2c1826', ceil: '#180d16', fk: 'carpet' },
+  { name: "THE GARAGE (DAD'S LAIR)",       short: 'GARAGE',   x: 30,   y: 880, w: 800, h: 890, tint: '#16181e', wall: '#465066', floor: '#1c2028', ceil: '#0e1014', fk: 'concrete' },
+  { name: 'THE BASEMENT (SUS)',            x: 860,  y: 880, w: 640, h: 890, short: 'BASEMENT', tint: '#141018', wall: '#3d3550', floor: '#17131e', ceil: '#0b090f', fk: 'dirt' },
+  { name: 'THE BATHROOM (COURTESY FLUSH)', short: 'BATHROOM', x: 1530, y: 880, w: 470, h: 890, tint: '#141e26', wall: '#3f7f96', floor: '#182630', ceil: '#0c161c', fk: 'tile2' },
+  { name: 'THE BACKYARD (HOA APPROVED)',   short: 'BACKYARD', x: 2030, y: 880, w: 540, h: 890, tint: '#14261a', wall: '#3c6b45', floor: '#16281c', ceil: '#0a1810', fk: 'grass' },
 ];
-// decorative (non-interactive) props to furnish rooms so they don't feel empty.
+ROOMS.forEach((r, i) => (r.idx = i));
+// decorative (non-interactive) props, all painted via artProp ‚Äî furnish + fun-house.
 const DECOR = [
-  { x: 400, y: 250, e: '🍳', s: 62 }, { x: 300, y: 500, e: '🔪', s: 50 }, { x: 720, y: 430, e: '☕', s: 46 },
-  { x: 1180, y: 300, e: '🪑', s: 66 }, { x: 1450, y: 520, e: '🖼️', s: 58 }, { x: 970, y: 480, e: '💡', s: 54 }, { x: 1300, y: 700, e: '🪴', s: 60 },
-  { x: 2100, y: 300, e: '🪞', s: 62 }, { x: 2350, y: 520, e: '🧴', s: 46 }, { x: 2000, y: 480, e: '🕯️', s: 50 },
-  { x: 300, y: 1200, e: '🛢️', s: 60 }, { x: 500, y: 1450, e: '🔧', s: 46 }, { x: 720, y: 1300, e: '🪜', s: 66 },
-  { x: 1000, y: 1250, e: '🕯️', s: 48 }, { x: 1350, y: 1450, e: '🕸️', s: 54 }, { x: 1180, y: 1550, e: '⚰️', s: 70 },
-  { x: 1620, y: 1250, e: '🪥', s: 44 }, { x: 1850, y: 1450, e: '🧼', s: 44 }, { x: 1780, y: 1300, e: '🪒', s: 42 },
-  { x: 2150, y: 1200, e: '🌷', s: 52 }, { x: 2450, y: 1450, e: '🪴', s: 60 }, { x: 2250, y: 1550, e: '🦩', s: 66 },
+  { x: 400, y: 250, kind: 'chair', s: 76 }, { x: 300, y: 500, kind: 'candle', s: 64 }, { x: 720, y: 430, kind: 'crate', s: 60 },
+  { x: 1180, y: 300, kind: 'chair', s: 74 }, { x: 1450, y: 520, kind: 'lamp', s: 94 }, { x: 970, y: 480, kind: 'mirror', s: 90 }, { x: 1300, y: 700, kind: 'plant', s: 74 },
+  { x: 2100, y: 300, kind: 'mirror', s: 90 }, { x: 2350, y: 520, kind: 'candle', s: 60 }, { x: 2000, y: 480, kind: 'lamp', s: 88 },
+  { x: 300, y: 1200, kind: 'crate', s: 68 }, { x: 500, y: 1450, kind: 'ladder', s: 100 }, { x: 720, y: 1300, kind: 'chair', s: 70 },
+  { x: 1000, y: 1250, kind: 'candle', s: 62 }, { x: 1350, y: 1450, kind: 'coffin', s: 104 }, { x: 1180, y: 1550, kind: 'candle', s: 58 },
+  { x: 1620, y: 1250, kind: 'candle', s: 54 }, { x: 1850, y: 1450, kind: 'crate', s: 54 }, { x: 1780, y: 1300, kind: 'mirror', s: 82 },
+  { x: 2150, y: 1200, kind: 'flamingo', s: 78 }, { x: 2450, y: 1450, kind: 'flamingo', s: 74 }, { x: 2250, y: 1550, kind: 'bush', s: 66 },
 ];
 // cap: 2 = two friends can cram in together (hide + try not to laugh, catch = both busted)
 // secret: true = hidden until you wander close enough to discover it
 const SPOTS = [
-  { id: 'k1', x: 170,  y: 170,  emoji: '🗄️', label: 'The Fridge (Leftovers of the Damned)' },
-  { id: 'k2', x: 620,  y: 150,  emoji: '🧀', label: 'Giant Cheese Wheel (Why)' },
-  { id: 'k3', x: 150,  y: 720,  emoji: '🗑️', label: 'Trash. Home.' },
-  { id: 'k4', x: 650,  y: 700,  emoji: '🍕', label: 'Pizza Box Tower', small: true },
-  { id: 'l1', x: 1010, y: 160,  emoji: '🛋️', label: 'Couch Cushion Abyss', cap: 2 },
-  { id: 'l2', x: 1620, y: 160,  emoji: '📺', label: 'Behind the TV (Cables of Doom)' },
-  { id: 'l3', x: 1000, y: 710,  emoji: '🪴', label: 'Extremely Fake Plant' },
-  { id: 'l4', x: 1630, y: 710,  emoji: '🧸', label: 'Emotional Support Teddy Pile', small: true },
-  { id: 'b1', x: 1930, y: 160,  emoji: '🛏️', label: 'Under the Bed (Monsters Only)', cap: 2 },
-  { id: 'b2', x: 2460, y: 160,  emoji: '🚪', label: 'The Closet (Come Out Eventually)', cap: 2 },
-  { id: 'b3', x: 2450, y: 710,  emoji: '🧺', label: 'Laundry: Chair Edition' },
-  { id: 'b4', x: 1930, y: 710,  emoji: '👠', label: 'Shoe Pile of a Thousand Regrets', small: true },
-  { id: 'g1', x: 190,  y: 1060, emoji: '🚗', label: 'Under the Car (Oil Included)', cap: 2 },
-  { id: 'g2', x: 660,  y: 1040, emoji: '🛞', label: 'Tire Fort' },
-  { id: 'g3', x: 180,  y: 1660, emoji: '📦', label: "Boxes of Your Ex's Stuff" },
-  { id: 'g4', x: 670,  y: 1660, emoji: '🧰', label: 'Toolbox (Dad Knows)', small: true },
-  { id: 's1', x: 970,  y: 1040, emoji: '🕸️', label: 'Cobweb Corner (Free Spiders)' },
-  { id: 's2', x: 1390, y: 1040, emoji: '🍷', label: 'Wine Rack of Poor Choices' },
-  { id: 's3', x: 980,  y: 1660, emoji: '🧟', label: 'Creepy Mannequin Squad' },
-  { id: 's4', x: 1390, y: 1660, emoji: '🎸', label: "Dad's Band Equipment (RIP)", small: true },
-  { id: 't1', x: 1630, y: 1030, emoji: '🛁', label: 'Tub of Regret', cap: 2 },
-  { id: 't2', x: 1910, y: 1030, emoji: '🚿', label: 'The Shower (Sing Quietly)', cap: 2 },
-  { id: 't3', x: 1640, y: 1670, emoji: '🚽', label: 'The Toilet (Godspeed)' },
-  { id: 't4', x: 1910, y: 1670, emoji: '🧻', label: 'TP Fort (Y2K Stockpile)', small: true },
-  { id: 'y1', x: 2140, y: 1020, emoji: '🌳', label: 'Suspicious Bush (Classic)' },
-  { id: 'y2', x: 2470, y: 1040, emoji: '⛺', label: 'Murder Tent', cap: 2 },
-  { id: 'y3', x: 2150, y: 1660, emoji: '🍖', label: 'Behind the Grill (Smells Great)' },
-  { id: 'y4', x: 2470, y: 1660, emoji: '🌻', label: 'Sunflower Witness Protection', small: true },
+  { id: 'k1', x: 170,  y: 170,  emoji: 'üóÑÔ∏è', label: 'The Fridge (Leftovers of the Damned)' },
+  { id: 'k2', x: 620,  y: 150,  emoji: 'üßÄ', label: 'Giant Cheese Wheel (Why)' },
+  { id: 'k3', x: 150,  y: 720,  emoji: 'üóëÔ∏è', label: 'Trash. Home.' },
+  { id: 'k4', x: 650,  y: 700,  emoji: 'üçï', label: 'Pizza Box Tower', small: true },
+  { id: 'l1', x: 1010, y: 160,  emoji: 'üõãÔ∏è', label: 'Couch Cushion Abyss', cap: 2 },
+  { id: 'l2', x: 1620, y: 160,  emoji: 'üì∫', label: 'Behind the TV (Cables of Doom)' },
+  { id: 'l3', x: 1000, y: 710,  emoji: 'ü™¥', label: 'Extremely Fake Plant' },
+  { id: 'l4', x: 1630, y: 710,  emoji: 'üß∏', label: 'Emotional Support Teddy Pile', small: true },
+  { id: 'b1', x: 1930, y: 160,  emoji: 'üõèÔ∏è', label: 'Under the Bed (Monsters Only)', cap: 2 },
+  { id: 'b2', x: 2460, y: 160,  emoji: 'üö™', label: 'The Closet (Come Out Eventually)', cap: 2 },
+  { id: 'b3', x: 2450, y: 710,  emoji: 'üß∫', label: 'Laundry: Chair Edition' },
+  { id: 'b4', x: 1930, y: 710,  emoji: 'üë†', label: 'Shoe Pile of a Thousand Regrets', small: true },
+  { id: 'g1', x: 190,  y: 1060, emoji: 'üöó', label: 'Under the Car (Oil Included)', cap: 2 },
+  { id: 'g2', x: 660,  y: 1040, emoji: 'üõû', label: 'Tire Fort' },
+  { id: 'g3', x: 180,  y: 1660, emoji: 'üì¶', label: "Boxes of Your Ex's Stuff" },
+  { id: 'g4', x: 670,  y: 1660, emoji: 'üß∞', label: 'Toolbox (Dad Knows)', small: true },
+  { id: 's1', x: 970,  y: 1040, emoji: 'üï∏Ô∏è', label: 'Cobweb Corner (Free Spiders)' },
+  { id: 's2', x: 1390, y: 1040, emoji: 'üç∑', label: 'Wine Rack of Poor Choices' },
+  { id: 's3', x: 980,  y: 1660, emoji: 'üßü', label: 'Creepy Mannequin Squad' },
+  { id: 's4', x: 1390, y: 1660, emoji: 'üé∏', label: "Dad's Band Equipment (RIP)", small: true },
+  { id: 't1', x: 1630, y: 1030, emoji: 'üõÅ', label: 'Tub of Regret', cap: 2 },
+  { id: 't2', x: 1910, y: 1030, emoji: 'üöø', label: 'The Shower (Sing Quietly)', cap: 2 },
+  { id: 't3', x: 1640, y: 1670, emoji: 'üöΩ', label: 'The Toilet (Godspeed)' },
+  { id: 't4', x: 1910, y: 1670, emoji: 'üßª', label: 'TP Fort (Y2K Stockpile)', small: true },
+  { id: 'y1', x: 2140, y: 1020, emoji: 'üå≥', label: 'Suspicious Bush (Classic)' },
+  { id: 'y2', x: 2470, y: 1040, emoji: '‚õ∫', label: 'Murder Tent', cap: 2 },
+  { id: 'y3', x: 2150, y: 1660, emoji: 'üçñ', label: 'Behind the Grill (Smells Great)' },
+  { id: 'y4', x: 2470, y: 1660, emoji: 'üåª', label: 'Sunflower Witness Protection', small: true },
   // ---- SECRET spots (hidden until discovered) ----
-  { id: 'x1', x: 90,   y: 430,  emoji: '🕳️', label: 'Loose Floorboard (SECRET)', secret: true },
-  { id: 'x2', x: 1740, y: 430,  emoji: '🚪', label: 'Hidden Wall Nook (SECRET)', secret: true },
-  { id: 'x3', x: 1180, y: 1710, emoji: '🔥', label: 'Behind the Water Heater (SECRET)', secret: true },
-  { id: 'x4', x: 2540, y: 1300, emoji: '🗿', label: 'Hollow Garden Gnome (SECRET)', secret: true, small: true },
-  { id: 'x5', x: 430,  y: 90,   emoji: '❄️', label: 'Deep Freezer (SECRET, Cold)', secret: true },
+  { id: 'x1', x: 90,   y: 430,  emoji: 'üï≥Ô∏è', label: 'Loose Floorboard (SECRET)', secret: true },
+  { id: 'x2', x: 1740, y: 430,  emoji: 'üö™', label: 'Hidden Wall Nook (SECRET)', secret: true },
+  { id: 'x3', x: 1180, y: 1710, emoji: 'üî•', label: 'Behind the Water Heater (SECRET)', secret: true },
+  { id: 'x4', x: 2540, y: 1300, emoji: 'üóø', label: 'Hollow Garden Gnome (SECRET)', secret: true, small: true },
+  { id: 'x5', x: 430,  y: 90,   emoji: '‚ùÑÔ∏è', label: 'Deep Freezer (SECRET, Cold)', secret: true },
 ];
 // non-hiding gag objects to bonk for a sound + one-time coin. pure easter eggs.
 const EGGS = [
-  { id: 'duck',  x: 380,  y: 260,  emoji: '🦆', label: 'Rubber Duck', sfx: 'squeak', line: '🦆 SQUEAK. that is it. that is the duck.' },
-  { id: 'button',x: 430,  y: 1500, emoji: '🔴', label: 'DO NOT PRESS', sfx: 'airhorn', line: '🔴 you pressed it. of course you did.', chaos: true },
-  { id: 'paint', x: 1300, y: 90,   emoji: '🖼️', label: 'Cursed Painting', sfx: 'spooky', line: '🖼️ the painting whispers your search history.' },
-  { id: 'juke',  x: 1300, y: 1200, emoji: '📻', label: 'Haunted Jukebox', sfx: 'disco', line: '📻 the jukebox only plays ONE cursed song.' },
-  { id: 'gnome', x: 2300, y: 950,  emoji: '🧄', label: 'Garlic Shrine', sfx: 'squelch', line: '🧄 you disturbed the garlic. bold.' },
-  { id: 'phone', x: 780,  y: 1300, emoji: '☎️', label: 'Ancient Phone', sfx: 'burp', line: '☎️ it is for you. it is always for you.' },
+  { id: 'duck',  x: 380,  y: 260,  emoji: 'ü¶Ü', label: 'Rubber Duck', sfx: 'squeak', line: 'ü¶Ü SQUEAK. that is it. that is the duck.' },
+  { id: 'button',x: 430,  y: 1500, emoji: 'üî¥', label: 'DO NOT PRESS', sfx: 'airhorn', line: 'üî¥ you pressed it. of course you did.', chaos: true },
+  { id: 'paint', x: 1300, y: 90,   emoji: 'üñºÔ∏è', label: 'Cursed Painting', sfx: 'spooky', line: 'üñºÔ∏è the painting whispers your search history.' },
+  { id: 'juke',  x: 1300, y: 1200, emoji: 'üìª', label: 'Haunted Jukebox', sfx: 'disco', line: 'üìª the jukebox only plays ONE cursed song.' },
+  { id: 'gnome', x: 2300, y: 950,  emoji: 'üßÑ', label: 'Garlic Shrine', sfx: 'squelch', line: 'üßÑ you disturbed the garlic. bold.' },
+  { id: 'phone', x: 780,  y: 1300, emoji: '‚òéÔ∏è', label: 'Ancient Phone', sfx: 'burp', line: '‚òéÔ∏è it is for you. it is always for you.' },
 ];
+// painter kind for every hiding spot (artProp in art.js) ‚Äî the emoji are dead
+const SPOT_KIND = {
+  k1: 'fridge', k2: 'cheese', k3: 'trash', k4: 'pizzastack',
+  l1: 'couch', l2: 'tv', l3: 'plant', l4: 'teddy',
+  b1: 'bed', b2: 'closet', b3: 'hamper', b4: 'shoes',
+  g1: 'car', g2: 'tires', g3: 'crate', g4: 'toolbox',
+  s1: 'web', s2: 'wine', s3: 'mannequin', s4: 'amp',
+  t1: 'tub', t2: 'shower', t3: 'toilet', t4: 'tp',
+  y1: 'bush', y2: 'tent', y3: 'grill', y4: 'sunflower',
+  x1: 'hole', x2: 'nook', x3: 'heater', x4: 'gnome', x5: 'freezer',
+};
+SPOTS.forEach(sp => { sp.kind = SPOT_KIND[sp.id] || 'crate'; });
+const EGG_KIND = { duck: 'duck', button: 'button', paint: 'painting', juke: 'jukebox', gnome: 'garlic', phone: 'phone' };
+EGGS.forEach(e => { e.kind = EGG_KIND[e.id] || 'crate'; });
 const ROOM_CENTERS = [[430, 440], [1315, 440], [2185, 440], [430, 1325], [1180, 1325], [1765, 1325], [2300, 1325]];
 const SPAWN_JITTER = [[0, 0], [130, 90], [-130, -90]];
 
 const HATS = [
   { e: '',   name: 'BALD & PROUD', cost: 0 },
-  { e: '🧢', name: 'DAD CAP', cost: 6 },
-  { e: '🎩', name: 'FANCY LAD', cost: 8 },
-  { e: '🎀', name: 'PRECIOUS', cost: 8 },
-  { e: '🍳', name: 'BREAKFAST', cost: 9 },
-  { e: '🤠', name: 'YEEHAW', cost: 10 },
-  { e: '🪖', name: 'TACTICOOL', cost: 12 },
-  { e: '🧻', name: 'MUMMY BUDGET', cost: 14 },
-  { e: '💩', name: 'THE HUMBLER', cost: 15 },
-  { e: '🦄', name: 'MAJESTIC', cost: 18 },
-  { e: '👑', name: 'ACTUAL ROYALTY', cost: 25 },
-  { e: '🍆', name: 'THE EGGPLANT', cost: 20, adult: true },
-  { e: '🩲', name: 'EMERGENCY UNDIES', cost: 16, adult: true },
+  { e: 'üß¢', name: 'DAD CAP', cost: 6 },
+  { e: 'üé©', name: 'FANCY LAD', cost: 8 },
+  { e: 'üéÄ', name: 'PRECIOUS', cost: 8 },
+  { e: 'üç≥', name: 'BREAKFAST', cost: 9 },
+  { e: 'ü§†', name: 'YEEHAW', cost: 10 },
+  { e: 'ü™ñ', name: 'TACTICOOL', cost: 12 },
+  { e: 'üßª', name: 'MUMMY BUDGET', cost: 14 },
+  { e: 'üí©', name: 'THE HUMBLER', cost: 15 },
+  { e: 'ü¶Ñ', name: 'MAJESTIC', cost: 18 },
+  { e: 'üëë', name: 'ACTUAL ROYALTY', cost: 25 },
+  { e: 'üçÜ', name: 'THE EGGPLANT', cost: 20, adult: true },
+  { e: 'ü©≤', name: 'EMERGENCY UNDIES', cost: 16, adult: true },
 ];
 const UPS = [
-  { id: 'gym',   e: '🏋️', name: 'GYM RAT',    desc: '+4% run speed per level', cost: [12, 20, 30] },
-  { id: 'yoga',  e: '🧘', name: 'HOT YOGA',   desc: '8% smaller body per level', cost: [14, 24] },
-  { id: 'poker', e: '😐', name: 'POKER FACE', desc: 'laugh detector 15% more forgiving per level', cost: [15, 25, 35] },
-  { id: 'greed', e: '🤑', name: 'CAPITALISM', desc: '+1 bonus coin on every task', cost: [20] },
+  { id: 'gym',   e: 'üèãÔ∏è', name: 'GYM RAT',    desc: '+4% run speed per level', cost: [12, 20, 30] },
+  { id: 'yoga',  e: 'üßò', name: 'HOT YOGA',   desc: '8% smaller body per level', cost: [14, 24] },
+  { id: 'poker', e: 'üòê', name: 'POKER FACE', desc: 'laugh detector 15% more forgiving per level', cost: [15, 25, 35] },
+  { id: 'greed', e: 'ü§ë', name: 'CAPITALISM', desc: '+1 bonus coin on every task', cost: [20] },
 ];
 
 // Skins are now recolours of the hand-drawn creature. skin value = a hex colour ('' = the
@@ -146,24 +161,24 @@ const CHAR_SKINS = { zoomy: SKIN_PALETTES, slurp: SKIN_PALETTES, gremlin: SKIN_P
 // Props (held beside character). Unlock = selected character's level.
 const ACCESSORIES = [
   {e:'',n:'NOTHING',lvl:0},
-  {e:'🪄',n:'MAGIC WAND',lvl:1},
-  {e:'🗡️',n:'TINY SWORD',lvl:2},
-  {e:'🎈',n:'SAD BALLOON',lvl:3},
-  {e:'🔥',n:'HANDS OF FLAME',lvl:4},
-  {e:'🏆',n:'PARTICIPATION',lvl:5},
-  {e:'🍌',n:'SUS BANANA',lvl:1,adult:true},
-  {e:'🍆',n:'THE WAND (18+)',lvl:2,adult:true},
-  {e:'🩲',n:'LUCKY DRAWERS',lvl:3,adult:true},
+  {e:'ü™Ñ',n:'MAGIC WAND',lvl:1},
+  {e:'üó°Ô∏è',n:'TINY SWORD',lvl:2},
+  {e:'üéà',n:'SAD BALLOON',lvl:3},
+  {e:'üî•',n:'HANDS OF FLAME',lvl:4},
+  {e:'üèÜ',n:'PARTICIPATION',lvl:5},
+  {e:'üçå',n:'SUS BANANA',lvl:1,adult:true},
+  {e:'üçÜ',n:'THE WAND (18+)',lvl:2,adult:true},
+  {e:'ü©≤',n:'LUCKY DRAWERS',lvl:3,adult:true},
 ];
 // Auras (particle trail). Unlock = selected character's level.
 const AURAS = [
-  {id:'',n:'NONE',color:null,g:'🚫',lvl:0},
-  {id:'gold',n:'GOLD',color:'#ffe14d',g:'🟡',lvl:1},
-  {id:'toxic',n:'TOXIC',color:'#52ffa8',g:'🟢',lvl:2},
-  {id:'royal',n:'ROYAL',color:'#b28aff',g:'🟣',lvl:3},
-  {id:'fire',n:'FIRE',color:'#ff5470',g:'🔴',lvl:4},
-  {id:'rainbow',n:'RAINBOW',color:'rainbow',g:'🌈',lvl:5},
-  {id:'sweat',n:'SUS MIST',color:'#7fd4ff',g:'💧',lvl:2,adult:true},
+  {id:'',n:'NONE',color:null,g:'üö´',lvl:0},
+  {id:'gold',n:'GOLD',color:'#ffe14d',g:'üü°',lvl:1},
+  {id:'toxic',n:'TOXIC',color:'#52ffa8',g:'üü¢',lvl:2},
+  {id:'royal',n:'ROYAL',color:'#b28aff',g:'üü£',lvl:3},
+  {id:'fire',n:'FIRE',color:'#ff5470',g:'üî¥',lvl:4},
+  {id:'rainbow',n:'RAINBOW',color:'rainbow',g:'üåà',lvl:5},
+  {id:'sweat',n:'SUS MIST',color:'#7fd4ff',g:'üíß',lvl:2,adult:true},
 ];
 const AURA_COLOR = {};
 AURAS.forEach(a => (AURA_COLOR[a.id] = a.color));
@@ -381,7 +396,7 @@ socket.on('ping', p => {
 
 socket.on('quip', ({ id, name, text }) => {
   const bubble = { text, until: now() + 4500 };
-  if (id === G.myId) { G.myQuip = bubble; feed('🗣️ Your character just said that OUT LOUD. Snitch.'); }
+  if (id === G.myId) { G.myQuip = bubble; feed('üó£Ô∏è Your character just said that OUT LOUD. Snitch.'); }
   else if (G.ents[id]) G.ents[id].quip = bubble;
   const src = id === G.myId ? G.me : G.ents[id];
   const d = src ? dist(src, G.me) : 9999;
@@ -389,10 +404,10 @@ socket.on('quip', ({ id, name, text }) => {
 });
 
 const BODILY_FX = {
-  fart:  { emoji: '💨', sfx: 'fart',  mine: '💨 YOU just ripped one. Audibly. Everyone knows.', them: n => `💨 ${n} FARTED. The monster heard THAT.` },
-  queef: { emoji: '🍑', sfx: 'queef', mine: '🍑 THAT came from YOU. There is no coming back.', them: n => `🍑 ${n} QUEEFED. In this economy?? The monster is intrigued.` },
-  moan:  { emoji: '😩', sfx: 'moan',  mine: '😩 YOU moaned. Out loud. We all heard. Live with it.', them: n => `😩 ${n} let out a MOAN. Nobody knows why. The monster does now.` },
-  burp:  { emoji: '🫧', sfx: 'burp',  mine: '🫧 YOU burped like a dying walrus. Position revealed.', them: n => `🫧 ${n} BURPED loud enough to shake the drywall.` },
+  fart:  { emoji: 'üí®', sfx: 'fart',  mine: 'üí® YOU just ripped one. Audibly. Everyone knows.', them: n => `üí® ${n} FARTED. The monster heard THAT.` },
+  queef: { emoji: 'üçë', sfx: 'queef', mine: 'üçë THAT came from YOU. There is no coming back.', them: n => `üçë ${n} QUEEFED. In this economy?? The monster is intrigued.` },
+  moan:  { emoji: 'üò©', sfx: 'moan',  mine: 'üò© YOU moaned. Out loud. We all heard. Live with it.', them: n => `üò© ${n} let out a MOAN. Nobody knows why. The monster does now.` },
+  burp:  { emoji: 'ü´ß', sfx: 'burp',  mine: 'ü´ß YOU burped like a dying walrus. Position revealed.', them: n => `ü´ß ${n} BURPED loud enough to shake the drywall.` },
 };
 socket.on('event', ev => {
   const t = now();
@@ -404,19 +419,19 @@ socket.on('event', ev => {
     feed(ev.id === G.myId ? fx.mine : fx.them(ev.name));
   } else if (ev.type === 'cheese') {
     G.cheese = { id: ev.id, until: t + 12000 };
-    feed(ev.id === G.myId ? '🧀 YOU smell like cheese. The stench is VISIBLE.' : `🧀 ${ev.name} smells like cheese. Visibly.`);
+    feed(ev.id === G.myId ? 'üßÄ YOU smell like cheese. The stench is VISIBLE.' : `üßÄ ${ev.name} smells like cheese. Visibly.`);
   } else if (ev.type === 'lights') {
     G.lightsUntil = t + 8000;
-    feed('💡 LIGHTS OUT. Somebody licked a fuse.');
+    feed('üí° LIGHTS OUT. Somebody licked a fuse.');
     sfx.spooky(0.7);
   } else if (ev.type === 'quake') {
     G.quakeUntil = t + 6000;
-    feed('🌋 EARTHQUAKE. Every spot is jiggling. Trust nothing.');
+    feed('üåã EARTHQUAKE. Every spot is jiggling. Trust nothing.');
     sfx.roar(0.35);
     shake(5, 6000);
   } else if (ev.type === 'disco') {
     G.discoUntil = t + 6000;
-    feed('🪩 MANDATORY DISCO. Dance, fools.');
+    feed('ü™© MANDATORY DISCO. Dance, fools.');
     for (let i = 0; i < 8; i++) sfx.blip(0.5);
   }
 });
@@ -434,8 +449,8 @@ socket.on('task', t => {
     }
   }
   $('taskBar').classList.remove('hidden');
-  $('taskText').textContent = '📋 ' + t.desc;
-  $('taskProg').textContent = '+2🪙 +1⚡';
+  $('taskText').textContent = 'üìã ' + t.desc;
+  $('taskProg').textContent = '+2ü™ô +1‚ö°';
 });
 
 socket.on('taskDone', ({ id, name }) => {
@@ -443,7 +458,7 @@ socket.on('taskDone', ({ id, name }) => {
     G.juice = Math.min(5, G.juice + 1);
     store.coins = store.coins + 2 + upLvl('greed');
     sfx.squeak(0.8);
-    feed(`✅ TASK DONE. +${2 + upLvl('greed')}🪙 +1⚡`);
+    feed(`‚úÖ TASK DONE. +${2 + upLvl('greed')}ü™ô +1‚ö°`);
     updateBoosts();
   } else if (Math.random() < 0.3) {
     feed(`${name} did something useful while hiding. Gross.`);
@@ -457,7 +472,7 @@ socket.on('caught', ({ id, how }) => {
   if (id === G.myId) {
     G.ghost = true; G.mySpot = null; G.task = null;
     $('taskBar').classList.add('hidden');
-    const line = how === 'laugh' ? 'YOU DIED LAUGHING 😂⚰️' : CAUGHT_LINES[Math.floor(Math.random() * CAUGHT_LINES.length)];
+    const line = how === 'laugh' ? 'YOU DIED LAUGHING üòÇ‚ö∞Ô∏è' : CAUGHT_LINES[Math.floor(Math.random() * CAUGHT_LINES.length)];
     const b = $('caughtBanner');
     b.textContent = line + '\nYou are a ghost now. Be annoying.';
     b.classList.remove('hidden');
@@ -484,7 +499,7 @@ socket.on('roar', () => {
 socket.on('taunt', ({ text }) => {
   speak(text);
   const b = $('bubble');
-  b.textContent = '👹 ' + text;
+  b.textContent = 'üëπ ' + text;
   b.classList.remove('hidden');
   setTimeout(() => b.classList.add('hidden'), 4500);
 });
@@ -599,20 +614,21 @@ function renderLobby() {
     const tags = [];
     if (p.id === r.hostId) tags.push('<span class="tag host">HOST</span>');
     if (p.perk) tags.push(`<span class="tag perk">${(G.perksList.find(x => x.id === p.perk) || {}).emoji || ''} PERK</span>`);
-    tags.push(`<span class="tag">🪙 ${p.coins}</span>`);
+    tags.push(`<span class="tag">ü™ô ${p.coins}</span>`);
     row.innerHTML = `<span class="pe">${c.emoji}${p.hat || ''}</span> ${p.name}${p.id === G.myId ? ' (you)' : ''}<span class="tags">${tags.join('')}</span>`;
     pl.appendChild(row);
   }
 
   $('btnStart').style.display = host ? '' : 'none';
+  $('btnStart').textContent = r.players.length === 1 ? 'üö∂ EXPLORE SOLO (walk the map)' : 'ü©∏ START THE HUNT';
 }
 
 $('btnShare').onclick = async () => {
   const url = `${location.origin}/?room=${G.code}`;
-  const text = `GIGGLEDOOM 👹 get in here. Room ${G.code}: ${url}`;
+  const text = `GIGGLEDOOM üëπ get in here. Room ${G.code}: ${url}`;
   try {
     if (navigator.share) await navigator.share({ text });
-    else { await navigator.clipboard.writeText(text); $('btnShare').textContent = '✅ COPIED'; setTimeout(() => ($('btnShare').textContent = '📤 COPY INVITE'), 1500); }
+    else { await navigator.clipboard.writeText(text); $('btnShare').textContent = '‚úÖ COPIED'; setTimeout(() => ($('btnShare').textContent = 'üì§ COPY INVITE'), 1500); }
   } catch {}
 };
 $('btnStart').onclick = () => { unlockAudio(); initMic(); socket.emit('start'); };
@@ -621,14 +637,14 @@ $('btnNext').onclick = () => socket.emit('next');
 function lobbyLog(text) {
   const el = $('lobbyLog');
   const d = document.createElement('div');
-  d.textContent = '· ' + text;
+  d.textContent = '¬∑ ' + text;
   el.prepend(d);
   while (el.children.length > 12) el.lastChild.remove();
 }
 
 // ---------- shop ----------
 function renderShop() {
-  $('coinCount').textContent = `🪙 ${store.coins}`;
+  $('coinCount').textContent = `ü™ô ${store.coins}`;
   const grid = $('shopGrid'); grid.innerHTML = '';
   const owned = store.owned;
   for (const h of HATS) {
@@ -638,7 +654,7 @@ function renderShop() {
     const afford = store.coins >= h.cost;
     const b = document.createElement('button');
     b.className = 'shop-item' + (equipped ? ' equipped' : isOwned ? ' owned' : afford ? '' : ' locked');
-    b.innerHTML = `<span class="he">${h.e || '🧑‍🦲'}</span><b>${h.name}</b><small>${equipped ? 'EQUIPPED' : isOwned ? 'tap to equip' : `🪙 ${h.cost}`}</small>`;
+    b.innerHTML = `<span class="he">${h.e || 'üßë‚Äçü¶≤'}</span><b>${h.name}</b><small>${equipped ? 'EQUIPPED' : isOwned ? 'tap to equip' : `ü™ô ${h.cost}`}</small>`;
     b.onclick = () => {
       if (!isOwned) {
         if (!afford) return;
@@ -660,7 +676,7 @@ function renderShop() {
     const afford = !maxed && store.coins >= cost;
     const b = document.createElement('button');
     b.className = 'up-row' + (maxed ? ' maxed' : '');
-    b.innerHTML = `<span class="ue">${u.e}</span><span class="ub"><b>${u.name}</b><small>${u.desc}</small><span class="pips">${'●'.repeat(lvl)}${'○'.repeat(u.cost.length - lvl)}</span></span><span class="ucost">${maxed ? 'MAXED' : `🪙 ${cost}`}</span>`;
+    b.innerHTML = `<span class="ue">${u.e}</span><span class="ub"><b>${u.name}</b><small>${u.desc}</small><span class="pips">${'‚óè'.repeat(lvl)}${'‚óã'.repeat(u.cost.length - lvl)}</span></span><span class="ucost">${maxed ? 'MAXED' : `ü™ô ${cost}`}</span>`;
     b.onclick = () => {
       if (maxed || !afford) return;
       store.coins = store.coins - cost;
@@ -706,9 +722,9 @@ function renderLocker() {
   const prog = xpToNext(lockerChar);
   $('lockerCard').innerHTML =
     `<canvas class="lc-canvas" width="120" height="120" data-creature="${lockerChar}" data-tint="${tint}" data-hat="${eq.acc || ''}"></canvas>
-     <div class="lc-info"><b>${c.name} — LVL ${lvl}</b>
+     <div class="lc-info"><b>${c.name} ‚Äî LVL ${lvl}</b>
      <div class="xpbar"><div class="xpfill" style="width:${Math.floor(100 * prog.have / prog.need)}%"></div></div>
-     <small>${prog.have}/${prog.need} XP to LVL ${lvl + 1} · play this character to level up</small></div>`;
+     <small>${prog.have}/${prog.need} XP to LVL ${lvl + 1} ¬∑ play this character to level up</small></div>`;
 
   // SKINS = colour swatches
   const sg = $('skinGrid'); sg.innerHTML = '';
@@ -718,7 +734,7 @@ function renderLocker() {
     const swatch = it.c || CHAR_COL[lockerChar];
     const b = document.createElement('button');
     b.className = 'cos-item' + (eq.skin === it.c ? ' sel' : '') + (locked ? ' locked' : '') + (it.adult ? ' adult' : '');
-    b.innerHTML = `<span class="cse" style="display:inline-block;width:26px;height:26px;border-radius:50%;background:${swatch};border:2px solid #0006"></span><b>${it.n}</b>${locked ? `<small>🔒 LVL ${it.lvl}</small>` : it.adult ? '<small>18+</small>' : ''}${locked ? '<span class="lockbadge">🔒</span>' : ''}`;
+    b.innerHTML = `<span class="cse" style="display:inline-block;width:26px;height:26px;border-radius:50%;background:${swatch};border:2px solid #0006"></span><b>${it.n}</b>${locked ? `<small>üîí LVL ${it.lvl}</small>` : it.adult ? '<small>18+</small>' : ''}${locked ? '<span class="lockbadge">üîí</span>' : ''}`;
     b.onclick = () => { if (locked) return; eq.skin = it.c; saveEquip(); sendCosmetic(lockerChar); renderLocker(); };
     sg.appendChild(b);
   }
@@ -731,7 +747,7 @@ function renderLocker() {
       const b = document.createElement('button');
       const isSel = current === getVal(it);
       b.className = 'cos-item' + (isSel ? ' sel' : '') + (locked ? ' locked' : '') + (it.adult ? ' adult' : '');
-      b.innerHTML = `<span class="cse">${getGlyph(it) || '🚫'}</span><b>${it.n}</b>${locked ? `<small>🔒 LVL ${it.lvl}</small>` : it.adult ? '<small>18+</small>' : ''}${locked ? '<span class="lockbadge">🔒</span>' : ''}`;
+      b.innerHTML = `<span class="cse">${getGlyph(it) || 'üö´'}</span><b>${it.n}</b>${locked ? `<small>üîí LVL ${it.lvl}</small>` : it.adult ? '<small>18+</small>' : ''}${locked ? '<span class="lockbadge">üîí</span>' : ''}`;
       b.onclick = () => { if (locked) return; apply(it); saveEquip(); sendCosmetic(lockerChar); renderLocker(); };
       grid.appendChild(b);
     }
@@ -745,7 +761,7 @@ function renderLocker() {
 
 function renderHomeLevel() {
   const el = $('homeLevel');
-  if (el) el.textContent = `LVL ${accLevel()} · 🪙 ${store.coins}`;
+  if (el) el.textContent = `LVL ${accLevel()} ¬∑ ü™ô ${store.coins}`;
 }
 
 // ---------- round lifecycle ----------
@@ -801,25 +817,25 @@ function renderEnd(data) {
   let title = `ROUND ${G.room ? G.room.round : ''} RESULTS`;
   if (G.xpGain) {
     const cn = (CHARS[G.xpGain.char] || {}).name || '';
-    title += ` · +${G.xpGain.gain} XP`;
-    if (G.xpGain.leveled) title += ` · ${cn} LEVELED UP!`;
-    else if (G.xpGain.acctUp) title += ' · ACCOUNT LEVEL UP!';
+    title += ` ¬∑ +${G.xpGain.gain} XP`;
+    if (G.xpGain.leveled) title += ` ¬∑ ${cn} LEVELED UP!`;
+    else if (G.xpGain.acctUp) title += ' ¬∑ ACCOUNT LEVEL UP!';
   }
   $('endTitle').textContent = title;
-  const medals = ['🥇', '🥈', '🥉'];
+  const medals = ['ü•á', 'ü•à', 'ü•â'];
   const rk = $('ranking'); rk.innerHTML = '';
   data.ranking.forEach((r, i) => {
     const row = document.createElement('div');
     row.className = 'rank-row' + (r.survived ? '' : ' dead');
     const c = CHARS[r.char] || CHARS.zoomy;
-    row.innerHTML = `<span class="medal">${medals[i] || '💀'}</span> ${c.emoji} ${r.name} ${r.survived ? '<span class="tag" style="background:#0d5a3a">SURVIVED</span>' : ''}<span class="coins">+🪙 ${data.coins[r.id] || 0}</span>`;
+    row.innerHTML = `<span class="medal">${medals[i] || 'üíÄ'}</span> ${c.emoji} ${r.name} ${r.survived ? '<span class="tag" style="background:#0d5a3a">SURVIVED</span>' : ''}<span class="coins">+ü™ô ${data.coins[r.id] || 0}</span>`;
     rk.appendChild(row);
   });
   const seekerMeta = G.room && G.room.players.find(p => p.isSeeker);
   if (seekerMeta) {
     const row = document.createElement('div');
     row.className = 'rank-row';
-    row.innerHTML = `<span class="medal">👹</span> ${seekerMeta.name} (the monster) <span class="coins">+🪙 ${data.coins[seekerMeta.id] || 0}</span>`;
+    row.innerHTML = `<span class="medal">üëπ</span> ${seekerMeta.name} (the monster) <span class="coins">+ü™ô ${data.coins[seekerMeta.id] || 0}</span>`;
     rk.appendChild(row);
   }
   const winner = data.ranking[0];
@@ -930,8 +946,8 @@ function updateButtons() {
   const perk = meta && meta.perk;
   $('btnPerk').classList.toggle('hidden', !(aliveHider && perk && perk !== 'shoes' && !G.perkUsed && G.room.phase === 'seek'));
   if (perk) {
-    const labels = { smoke: '💨 SMOKE', double: '🪆 CLONE', snack: '🍗 SNACK' };
-    $('btnPerk').textContent = labels[perk] || '🎁 PERK';
+    const labels = { smoke: 'üí® SMOKE', double: 'ü™Ü CLONE', snack: 'üçó SNACK' };
+    $('btnPerk').textContent = labels[perk] || 'üéÅ PERK';
   }
   const seekerActive = amSeeker() && G.room.phase === 'seek';
   $('btnCheck').classList.toggle('hidden', !seekerActive);
@@ -945,7 +961,7 @@ function updateButtons() {
 }
 
 function updateBoosts() {
-  $('juiceChip').textContent = `⚡${G.juice}`;
+  $('juiceChip').textContent = `‚ö°${G.juice}`;
   const t = now();
   $('boostZoom').disabled = G.juice < 1 && t > G.zoomUntil;
   $('boostVanish').disabled = G.juice < 1 && t > G.vanishUntil;
@@ -957,25 +973,25 @@ function updateBoosts() {
 $('boostZoom').onclick = () => {
   if (G.juice < 1 || now() < G.zoomUntil) return;
   G.juice--; G.zoomUntil = now() + 4000;
-  feed('🏃 ZOOMIES! (4s)'); sfx.blip(0.8); updateBoosts();
+  feed('üèÉ ZOOMIES! (4s)'); sfx.blip(0.8); updateBoosts();
 };
 $('boostVanish').onclick = () => {
   if (G.juice < 1 || now() < G.vanishUntil) return;
   G.juice--; G.vanishUntil = now() + 4000;
-  feed('🫥 GHOST PEPPER! Invisible (4s)'); sfx.spooky(0.6); updateBoosts();
+  feed('ü´• GHOST PEPPER! Invisible (4s)'); sfx.spooky(0.6); updateBoosts();
 };
 $('boostMute').onclick = () => {
   if (G.juice < 1 || now() < G.muteUntil) return;
   G.juice--; G.muteUntil = now() + 10000;
-  feed('🤐 DUCT TAPE! Mic cannot snitch (10s)'); sfx.blip(0.8); updateBoosts();
+  feed('ü§ê DUCT TAPE! Mic cannot snitch (10s)'); sfx.blip(0.8); updateBoosts();
 };
 
 $('btnAction').onclick = () => {
-  if (G.mySpot) { G.mySpot = null; $('btnAction').textContent = '🫥 HIDE'; return; }
+  if (G.mySpot) { G.mySpot = null; $('btnAction').textContent = 'ü´• HIDE'; return; }
   const s = nearestFreeSpot();
   if (!s) { feed('No free hiding spot close enough. Keep waddling.'); return; }
   G.mySpot = s.id; G.me.x = s.x; G.me.y = s.y;
-  $('btnAction').textContent = '🚪 LEAVE';
+  $('btnAction').textContent = 'üö™ LEAVE';
   feed(`You crammed yourself into: ${s.label}`);
 };
 $('btnAbility').onclick = () => {
@@ -1017,13 +1033,13 @@ $('btnHaunt').onclick = () => {
 $('btnFlash').onclick = () => {
   G.flashOn = !G.flashOn;
   $('btnFlash').classList.toggle('active', G.flashOn);
-  feed(G.flashOn ? '🔦 Flashlight ON. Long beam, tunnel vision.' : '🔦 Flashlight off.');
+  feed(G.flashOn ? 'üî¶ Flashlight ON. Long beam, tunnel vision.' : 'üî¶ Flashlight off.');
 };
 $('btnLurk').onclick = () => {
   if (now() < G.cds.lurk) return;
   G.cds.lurk = now() + 16000;
   G.lurkUntil = now() + 5000;
-  feed('🌫️ LURKING. Invisible to hiders (5s). Sneak up.');
+  feed('üå´Ô∏è LURKING. Invisible to hiders (5s). Sneak up.');
 };
 $('btnDisguise').onclick = () => {
   if (now() < G.cds.disguise) return;
@@ -1032,7 +1048,7 @@ $('btnDisguise').onclick = () => {
   const dc = chars[Math.floor(Math.random() * chars.length)];
   const fakeNames = ['DAVE', 'KAREN', 'CHAD', 'BECCA', 'GARY', 'TODD', 'STACY'];
   G.disguise = { char: dc, name: fakeNames[Math.floor(Math.random() * fakeNames.length)], until: now() + 8000 };
-  feed('🎭 DISGUISED as a hider (8s). Go betray someone.');
+  feed('üé≠ DISGUISED as a hider (8s). Go betray someone.');
 };
 
 // ---------- physics ----------
@@ -1059,7 +1075,7 @@ function collideWalls(p, r) {
 function taskFrame(dtms) {
   if (!G.task || !G.room || G.room.phase !== 'seek' || amSeeker() || G.ghost) return;
   const t = G.task;
-  let done = false, progText = '+2🪙 +1⚡';
+  let done = false, progText = '+2ü™ô +1‚ö°';
   if (t.type === 'touch') {
     const s = SPOTS.find(x => x.id === t.spotId);
     if (s && dist(s, G.me) < 75) done = true;
@@ -1092,7 +1108,7 @@ function taskFrame(dtms) {
   if (done) {
     socket.emit('task:done', { seq: t.seq });
     G.task = null; G.taskProg = 0;
-    $('taskText').textContent = '📋 nice. next task incoming...';
+    $('taskText').textContent = 'üìã nice. next task incoming...';
     $('taskProg').textContent = '';
   }
 }
@@ -1173,7 +1189,7 @@ function step() {
   if (!amSeeker() && !G.ghost && (phase === 'seek' || phase === 'hiding')) {
     if (!G.mySpot) {
       const s = nearestFreeSpot();
-      $('btnAction').textContent = s ? `🫥 HIDE (${s.emoji})` : '🫥 HIDE';
+      $('btnAction').textContent = s ? `ü´• HIDE (${s.emoji})` : 'ü´• HIDE';
       $('btnAction').classList.toggle('cd', !s);
     }
   }
@@ -1198,16 +1214,16 @@ function worldFx(t) {
     G.eggCd[egg.id] = t + 12000;
     (sfx[egg.sfx] || sfx.blip)(0.9);
     const first = markFound(egg.id, 4);
-    feed(egg.line + (first ? ' (+4🪙 first find!)' : ''));
+    feed(egg.line + (first ? ' (+4ü™ô first find!)' : ''));
     if (egg.chaos) { G.discoUntil = t + 3000; shake(6, 400); }
-    if (first) feed(`🔎 secrets found: ${Object.keys(store.found).length}/${SECRET_TOTAL}`);
+    if (first) feed(`üîé secrets found: ${Object.keys(store.found).length}/${SECRET_TOTAL}`);
   }
   for (const s of SPOTS) {
     if (!s.secret) continue;
     if (dist(s, G.me) < 120 && markFound(s.id, 5)) {
       sfx.squeak(1); shake(3, 300);
-      feed(`🔓 SECRET SPOT FOUND: ${s.label} (+5🪙)`);
-      feed(`🔎 secrets found: ${Object.keys(store.found).length}/${SECRET_TOTAL}`);
+      feed(`üîì SECRET SPOT FOUND: ${s.label} (+5ü™ô)`);
+      feed(`üîé secrets found: ${Object.keys(store.found).length}/${SECRET_TOTAL}`);
     }
   }
 }
@@ -1224,7 +1240,7 @@ function sendPos() {
 }
 
 // ---------- raycasting ----------
-const PING_EMOJI = { laugh: '😂', talk: '🗣️', steps: '👟', ghost: '👻', decoy: '🔊', whiff: '💨', chicken: '🐔', smoke: '💨', monstergiggle: '👹', quip: '🗣️', fart: '💨' };
+const PING_EMOJI = { laugh: 'üòÇ', talk: 'üó£Ô∏è', steps: 'üëü', ghost: 'üëª', decoy: 'üîä', whiff: 'üí®', chicken: 'üêî', smoke: 'üí®', monstergiggle: 'üëπ', quip: 'üó£Ô∏è', fart: 'üí®' };
 const WALL_H = 150;
 const FOV = Math.PI / 3;
 
@@ -1271,7 +1287,7 @@ function render(t) {
   const COMPASS = ['E', 'SE', 'S', 'SW', 'W', 'NW', 'N', 'NE'];
   const dirIx = ((Math.round(((facing % (Math.PI * 2)) + Math.PI * 2) / (Math.PI / 4)) % 8) + 8) % 8;
   $('roomName').textContent = rmHere ? (rmHere.short || rmHere.name) : 'THE VOID';
-  $('compass').textContent = '· facing ' + COMPASS[dirIx];
+  $('compass').textContent = '¬∑ facing ' + COMPASS[dirIx];
   // ceiling: dark gradient tinted by current room
   const cg = ctx.createLinearGradient(0, 0, 0, horizon);
   cg.addColorStop(0, '#05030a'); cg.addColorStop(1, rmHere ? rmHere.ceil : '#160f24');
@@ -1287,9 +1303,17 @@ function render(t) {
   const CELL = 128;
   const FLOORSTEP = Math.max(3, Math.round(4 * DPR));
   const FCOL = Math.max(4, Math.round(8 * DPR));
+  // per-room light levels this frame (fun-house flicker)
+  const hsh = (a, b) => Math.abs(Math.sin(a * 127.13 + b * 311.7) * 43758.55) % 1;
+  const LIGHTS = ROOMS.map((r, i) => {
+    if (i === 4) return hsh(Math.floor(t / 95), 3) > 0.84 ? 0.5 : 0.95 + hsh(Math.floor(t / 200), 7) * 0.05; // basement flickers hard
+    if (i === 5) return 0.92 + 0.06 * Math.sin(t / 35); // bathroom fluorescent buzz
+    if (i === 6) return 0.88; // moonlit backyard
+    return 1;
+  });
   for (let y = Math.ceil(horizon) + 1; y < h; y += FLOORSTEP) {
     const p = y - horizon;
-    const d = (WALL_H * 0.5 * proj) / p;               // perpendicular world distance for this row
+    const d = (WALL_H * 0.5 * proj) / p;
     if (d > viewDist * 1.1) continue;
     const fog = clamp(1 - d / (viewDist * 1.05), 0, 1);
     const fx0 = G.me.x + ray0x * d, fy0 = G.me.y + ray0y * d;
@@ -1297,19 +1321,27 @@ function render(t) {
     for (let x = 0; x < w; x += FCOL) {
       const wx = fx0 + stepX * x, wy = fy0 + stepY * x;
       const rmF = roomAt(wx, wy);
-      const chk = ((Math.floor(wx / CELL) + Math.floor(wy / CELL)) & 1);
-      let base = rmF ? rmF.floor : '#141018';
-      // checker: brighten/darken alternating cells
-      const bd = chk ? 16 : -10;
-      const col = shade(base, Math.round(bd));
+      let bd = 0;
+      const base = rmF ? rmF.floor : '#141018';
+      switch (rmF && rmF.fk) {
+        case 'tile': { const cxT = Math.floor(wx / 110), cyT = Math.floor(wy / 110); bd = ((cxT + cyT) & 1) ? 15 : -8; if ((wx % 110) < 5 || (wy % 110) < 5) bd = -30; break; }
+        case 'tile2': { const cxT = Math.floor(wx / 64), cyT = Math.floor(wy / 64); bd = ((cxT + cyT) & 1) ? 18 : -6; if ((wx % 64) < 4 || (wy % 64) < 4) bd = -26; break; }
+        case 'wood': { const plank = Math.floor(wy / 52); bd = (plank & 1 ? 7 : -5) + Math.floor(hsh(plank, Math.floor(wx / 260)) * 12) - 6; if ((wy % 52) < 4) bd = -24; break; }
+        case 'carpet': { bd = Math.floor(hsh(Math.floor(wx / 26), Math.floor(wy / 26)) * 9) - 4; break; }
+        case 'concrete': { const sx2 = Math.floor(wx / 200), sy2 = Math.floor(wy / 200); bd = Math.floor(hsh(sx2, sy2) * 8) - 4; if ((wx % 200) < 6 || (wy % 200) < 6) bd = -20; break; }
+        case 'dirt': { bd = Math.floor(hsh(Math.floor(wx / 40), Math.floor(wy / 40)) * 14) - 7; if (hsh(Math.floor(wx / 90), Math.floor(wy / 90)) > 0.93) bd = 12; break; }
+        case 'grass': { bd = Math.floor(hsh(Math.floor(wx / 30), Math.floor(wy / 30)) * 16) - 6; break; }
+        default: bd = ((Math.floor(wx / CELL) + Math.floor(wy / CELL)) & 1) ? 10 : -6;
+      }
+      const L = rmF ? LIGHTS[rmF.idx] : 1;
       ctx.globalAlpha = 0.12 + 0.88 * fog;
-      ctx.fillStyle = col;
+      ctx.fillStyle = shade(base, Math.round(bd + (L - 1) * 70));
       ctx.fillRect(x + shx, y, FCOL + 1, FLOORSTEP + 1);
     }
   }
   ctx.globalAlpha = 1;
 
-  // walls via raycast (coloured by the room they belong to, with baseboard + crown trim)
+  // walls via raycast: room-coloured, panel seams, wainscot band, crown + baseboard
   const COL = Math.max(2, Math.round(3 * DPR));
   const nCols = Math.ceil(w / COL) + 1;
   const zbuf = new Float32Array(nCols);
@@ -1324,14 +1356,19 @@ function render(t) {
     if (!isFinite(perp) || perp > viewDist) continue;
     const sliceH = (WALL_H * proj) / perp;
     const top = horizon - sliceH / 2;
-    const shd = clamp(1 - perp / viewDist, 0.03, 1) * (hit.side ? 0.68 : 0.92);
     const rmW = roomAt(G.me.x + ca * (hit.dist - 4), G.me.y + sa * (hit.dist - 4));
+    const L = rmW ? LIGHTS[rmW.idx] : 1;
+    let shd = clamp(1 - perp / viewDist, 0.03, 1) * (hit.side ? 0.68 : 0.92) * L;
+    const u = hit.side ? (G.me.x + ca * hit.dist) : (G.me.y + sa * hit.dist);
+    const um = ((u % 96) + 96) % 96;
+    if (um < 5) shd *= 0.76; // panel seam shadow
     const wcol = rmW ? rmW.wall : '#5a3f84';
     ctx.fillStyle = disco ? `hsl(${(t / 4 + x) % 360},55%,${Math.floor(42 * shd)}%)` : shade(wcol, Math.round((shd - 1) * 150));
     ctx.fillRect(x + shx, top, COL + 1, sliceH);
-    // crown (top) + baseboard (bottom) trim for architectural read
     ctx.fillStyle = shade(wcol, Math.round(30 * shd - 10));
     ctx.fillRect(x + shx, top, COL + 1, Math.max(2, sliceH * 0.05));
+    ctx.fillStyle = shade(wcol, Math.round(-45 * shd - 15)); // wainscot rail
+    ctx.fillRect(x + shx, top + sliceH * 0.60, COL + 1, Math.max(1.5, sliceH * 0.03));
     ctx.fillStyle = shade(wcol, Math.round(-70 * shd - 20));
     ctx.fillRect(x + shx, top + sliceH * 0.86, COL + 1, Math.max(2, sliceH * 0.14));
   }
@@ -1339,25 +1376,33 @@ function render(t) {
   // gather billboards
   const sprites = [];
   const push = (x, y, glyph, size, alpha, label, labelColor, extra) => sprites.push({ x, y, glyph, size, alpha, label, labelColor, extra: extra || {} });
-  for (const d of DECOR) push(d.x, d.y, d.e, d.s, 1, '', '', { decor: true });
+  for (const d of DECOR) push(d.x, d.y, '', d.s, 1, '', '', { prop: d.kind });
   for (const b of ROOM_BOTS) {
     const idx = ROOM_BOTS.indexOf(b);
     const active = b.room === (rmHere && rmHere.name);
-    const quip = (active && G.botSay && G.botSay.idx === idx && t < G.botSay.until) ? { text: G.botSay.text, until: G.botSay.until } : null;
-    push(b.x, b.y, '', 120, 1, b.name, active ? '#ff6ad5' : 'rgba(255,150,210,0.5)', { bot: true, active, botIdx: idx, quip });
+    const say = (active && G.botSay && G.botSay.idx === idx && t < G.botSay.until) ? { text: G.botSay.text, until: G.botSay.until } : null;
+    // patrol drift inside their room
+    const rr = b.rectR || (b.rectR = ROOMS.find(r => r.name === b.room));
+    const bx = clamp(b.x + Math.sin(t / 1700 + idx * 2.1) * 130, rr.x + 90, rr.x + rr.w - 90);
+    const by = clamp(b.y + Math.cos(t / 2300 + idx * 1.3) * 80, rr.y + 90, rr.y + rr.h - 90);
+    push(bx, by, '', 120, 1, b.name, active ? '#ff6ad5' : 'rgba(255,150,210,0.5)', { bot: true, active, botIdx: idx, quip: say, talking: !!(say && !say.quiet) });
   }
+  const quake2 = t < G.quakeUntil;
   for (const sp of SPOTS) {
     if (sp.secret && !store.found[sp.id] && dist(sp, G.me) > 150) continue; // hidden until discovered/near
     const occ = spotOccupants(sp.id);
     const reach = !amSeeker() && !G.ghost && !G.mySpot && dist(sp, G.me) < 90 && (!sp.small || (myMeta() && myMeta().char === 'gremlin')) && occ < (sp.cap || 1);
     let label = sp.label;
-    if (sp.cap > 1) label += ` [${occ}/${sp.cap} 👥]`;
-    push(sp.x, sp.y, sp.emoji, sp.small ? 78 : 110, 1, label, reach ? '#52ffa8' : sp.secret ? '#ffd84d' : 'rgba(255,255,255,0.55)', { ground: true });
+    if (sp.cap > 1) label += ` [${occ}/${sp.cap}]`;
+    let jig = 0;
+    if (quake2) jig = Math.sin(t / 45 + sp.x) * 4;
+    else if (occ) { const op = G.room.players.find(x => x.id === (Object.entries(G.ents).find(([, e]) => e.spot === sp.id) || [])[0]); if (op && op.char === 'slurp') jig = Math.sin(t / 90) * 3; }
+    push(sp.x, sp.y, '', sp.small ? 82 : 118, 1, label, reach ? '#52ffa8' : sp.secret ? '#ffd84d' : 'rgba(255,255,255,0.55)', { prop: sp.kind, glow: reach, jig });
   }
-  for (const egg of EGGS) push(egg.x, egg.y, egg.emoji, 66, 1, egg.label, store.found[egg.id] ? '#8affc1' : 'rgba(255,255,255,0.5)', { egg: true });
-  for (const l of G.loot) if (!l.got) push(l.x, l.y, '✨', 46, 0.9, '', '', {});
-  for (const d of G.decoys) if (t < d.until) push(d.x, d.y, '🐿️', 66, 1, '', '', {});
-  for (const sn of G.snacks) if (t < sn.until) push(sn.x, sn.y, '🍗', 70, 1, '', '', {});
+  for (const egg of EGGS) push(egg.x, egg.y, '', 70, 1, egg.label, store.found[egg.id] ? '#8affc1' : 'rgba(255,255,255,0.5)', { prop: egg.kind });
+  for (const l of G.loot) if (!l.got) push(l.x, l.y, '', 52, 0.95, '', '', { prop: 'gem' });
+  for (const d of G.decoys) if (t < d.until) push(d.x, d.y, '', 56, 1, '', '', { prop: 'squeaker' });
+  for (const sn of G.snacks) if (t < sn.until) push(sn.x, sn.y, '', 58, 1, '', '', { prop: 'ham' });
   G.decoys = G.decoys.filter(d => t < d.until);
   G.snacks = G.snacks.filter(sn => t < sn.until);
   const tintOf = v => (typeof v === 'string' && v[0] === '#') ? v : ''; // ignore old emoji skins
@@ -1381,7 +1426,7 @@ function render(t) {
     const fearE = !!(skE && !p.isSeeker && dist(skE, e) < 450);
     push(e.x, e.y, '', 155, a, p.name, '#fff', { creature: p.char, tint: tintOf(p.skin), hat: p.hat, acc: p.acc, auraId: p.aura, moving: movingE, cheesy, quip: e.quip, talk: e.tk || 0, laugh: t < (e.laughUntil || 0), fear: fearE, seed: hash(id) % 9 });
   }
-  for (const pg of G.pings) { const age = (t - pg.t) / 1000; if (age > 2.2) continue; push(pg.x, pg.y, PING_EMOJI[pg.kind] || '🔊', 52, clamp(1 - age / 2.2, 0, 1), '', '', { ping: true }); }
+  for (const pg of G.pings) { const age = (t - pg.t) / 1000; if (age > 2.2) continue; push(pg.x, pg.y, '', 52, clamp(1 - age / 2.2, 0, 1), '', '', { ping: pg.kind, age }); }
   G.pings = G.pings.filter(p => (t - p.t) / 1000 < 2.5);
 
   // project + depth sort
@@ -1415,13 +1460,29 @@ function render(t) {
         auraId: spr.extra.auraId, moving: spr.extra.moving, talk: spr.extra.talk, laugh: spr.extra.laugh,
         fear: spr.extra.fear, seed: spr.extra.seed,
       });
-      if (spr.extra.cheesy) { ctx.globalAlpha = spr.alpha * fog; ctx.textAlign = 'center'; ctx.font = `${fontPx * 0.28}px serif`; ctx.fillText('🧀', spr.sx, yFeet - fontPx * 1.0); }
+      if (spr.extra.cheesy) { ctx.globalAlpha = spr.alpha * fog; ctx.textAlign = 'center'; ctx.font = `${fontPx * 0.28}px serif`; ctx.fillText('üßÄ', spr.sx, yFeet - fontPx * 1.0); }
     } else if (spr.extra.monster) {
       artMonster(ctx, spr.sx, yFeet, fontPx, t, G.monsterHue, { alpha: spr.alpha * fog, roar: t - G.roarFlash < 900 });
     } else if (spr.extra.ghostArt) {
       artGhost(ctx, spr.sx, yFeet, fontPx, t, { alpha: spr.alpha * fog, seed: spr.extra.seed });
     } else if (spr.extra.bot) {
-      drawBot(spr.sx, yFeet - fontPx * 0.5, fontPx, t, spr.extra.active, spr.extra.botIdx);
+      artBot(ctx, spr.sx, yFeet, fontPx, t, {
+        alpha: spr.alpha * fog, active: spr.extra.active, toolIdx: spr.extra.botIdx,
+        seed: spr.extra.botIdx * 3, talking: spr.extra.talking,
+      });
+    } else if (spr.extra.prop) {
+      artProp(ctx, spr.sx, yFeet, fontPx, spr.extra.prop, t, { alpha: spr.alpha * fog, glow: spr.extra.glow, jig: spr.extra.jig });
+    } else if (spr.extra.ping) {
+      // sound marker: expanding ground ring + hot core, colour-coded (no emoji)
+      const pk = spr.extra.ping, age2 = spr.extra.age;
+      const pc = pk === 'laugh' ? '#ff5470' : pk === 'fart' ? '#c9963c' : pk === 'ghost' ? '#9fd8ff' : '#ffe14d';
+      ctx.globalAlpha = spr.alpha * fog;
+      ctx.strokeStyle = pc; ctx.lineWidth = Math.max(2, fontPx * 0.06);
+      ctx.beginPath(); ctx.ellipse(spr.sx, yFeet, fontPx * (0.3 + age2 * 0.9), fontPx * (0.10 + age2 * 0.3), 0, 0, Math.PI * 2); ctx.stroke();
+      const cg2 = ctx.createRadialGradient(spr.sx, yFeet - fontPx * 0.3, 1, spr.sx, yFeet - fontPx * 0.3, fontPx * 0.3);
+      cg2.addColorStop(0, pc); cg2.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = cg2;
+      ctx.beginPath(); ctx.arc(spr.sx, yFeet - fontPx * 0.3, fontPx * 0.3, 0, Math.PI * 2); ctx.fill();
     } else {
       ctx.globalAlpha = spr.alpha * fog;
       ctx.font = `${fontPx}px serif`;
@@ -1438,7 +1499,7 @@ function render(t) {
       ctx.globalAlpha = fog;
       ctx.font = `bold ${clamp(fontPx * 0.13, 10, 18)}px sans-serif`;
       ctx.fillStyle = '#fff';
-      ctx.fillText('💬 ' + spr.extra.quip.text.slice(0, 40), spr.sx, yFeet - fontPx * 1.25);
+      ctx.fillText('üí¨ ' + spr.extra.quip.text.slice(0, 40), spr.sx, yFeet - fontPx * 1.25);
     }
     ctx.globalAlpha = 1;
   }
@@ -1446,6 +1507,16 @@ function render(t) {
   // reticle for seeker (aim helper)
   $('reticle').classList.toggle('hidden', !(amSeeker() && G.room.phase === 'seek' && !G.mySpot));
 
+  // drifting dust motes catch the lantern light (ambient life)
+  if (!G.motes) G.motes = Array.from({ length: 22 }, (_, i) => ({ a: hsh(i, 1), b: hsh(i, 2), s: 1 + hsh(i, 3) * 2, v: 0.35 + hsh(i, 4) * 0.7 }));
+  for (const m of G.motes) {
+    const mx = ((m.a + t * 0.000009 * m.v + facing * 0.08) % 1 + 1) % 1 * w;
+    const myy = ((m.b + t * 0.000016 * m.v) % 1) * h;
+    ctx.globalAlpha = 0.04 + m.s * 0.025;
+    ctx.fillStyle = '#ffdcae';
+    ctx.beginPath(); ctx.arc(mx, myy, m.s * DPR, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
   // warm lantern glow: your personal pool of light (R.E.P.O. style)
   if (!G.ghost) {
     ctx.save();
@@ -1481,7 +1552,7 @@ function render(t) {
     const label = (SPOTS.find(sp => sp.id === G.mySpot) || {}).label || 'a spot';
     ctx.globalAlpha = 1; ctx.textAlign = 'center';
     ctx.fillStyle = '#ffe14d'; ctx.font = `bold ${22 * DPR}px sans-serif`;
-    ctx.fillText('🫥 HIDING IN', w / 2, h / 2 - 18 * DPR);
+    ctx.fillText('ü´• HIDING IN', w / 2, h / 2 - 18 * DPR);
     ctx.fillStyle = '#fff'; ctx.font = `bold ${16 * DPR}px sans-serif`;
     ctx.fillText(label.toUpperCase(), w / 2, h / 2 + 8 * DPR);
     ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = `${12 * DPR}px sans-serif`;
@@ -1573,7 +1644,7 @@ function drawMinimap(t, w, h) {
 }
 
 function drawBubble(x, y, text) {
-  const short = text.length > 46 ? text.slice(0, 44) + '…' : text;
+  const short = text.length > 46 ? text.slice(0, 44) + '‚Ä¶' : text;
   ctx.font = 'bold 13px sans-serif';
   const tw = ctx.measureText(short).width;
   ctx.fillStyle = 'rgba(255,255,255,0.95)';
@@ -1586,7 +1657,7 @@ function drawBubble(x, y, text) {
 function drawStink(x, y, t) {
   ctx.font = '22px serif';
   ctx.globalAlpha = 0.85;
-  ctx.fillText('🧀', x + Math.sin(t / 300) * 8, y - 52 - (t / 100) % 10);
+  ctx.fillText('üßÄ', x + Math.sin(t / 300) * 8, y - 52 - (t / 100) % 10);
   ctx.globalAlpha = 0.4;
   ctx.strokeStyle = '#b8d44a'; ctx.lineWidth = 2;
   for (const off of [-14, 0, 14]) {
@@ -1711,21 +1782,47 @@ function drawBot(cx, cy, size, t, active, idx) {
 function speakBot(text, pitch) {
   try { const u = new SpeechSynthesisUtterance(text); u.pitch = pitch; u.rate = 0.92; u.volume = 1; speechSynthesis.speak(u); } catch {}
 }
+// low mutterings the bots cycle through while doing their chores (bubble only, no TTS)
+const MUMBLES = [
+  '...mrmm... the walls are hungry again...',
+  '*counts own teeth* ...one missing... WHO took it...',
+  '...{name} looks chewy today... heh...',
+  '...boss says no eating the guests before six...',
+  '...scrub... scrub... scrub... it never comes off...',
+  '...heh heh... femurs...',
+  '...i licked it, so it is legally mine...',
+  '...do not tell the monster about The Thing...',
+  '...tuesday. it is ALWAYS tuesday down here...',
+  '...they never check the ceiling... never ever...',
+  '...mmm... loadbearing drywall...',
+  '...the gnome KNOWS. the gnome saw everything...',
+  '...{name} again?? in MY room?? unionize...',
+  '...i was a real boy once. probably. hard to say...',
+];
 // only the bot of the room YOU are standing in talks, and only one at a time -> no voice soup
 function botSpeak(t) {
   if (!G.room || (G.room.phase !== 'seek' && G.room.phase !== 'hiding')) return;
   const rm = roomAt(G.me.x, G.me.y); if (!rm) return;
   const bi = ROOM_BOTS.findIndex(b => b.room === rm.name); if (bi < 0) return;
+  const bot = ROOM_BOTS[bi];
+  const names = G.room.players.filter(p => !p.caught).map(p => p.id === G.myId ? 'YOU' : p.name);
+  const nm = names.length ? names[Math.floor(Math.random() * names.length)] : 'SOMEBODY';
+  // quiet mumble between big lines
+  if (t > (G.botMumbleNext || 0) && !(G.botSay && t < G.botSay.until)) {
+    G.botMumbleNext = t + 5000 + Math.random() * 3000;
+    const m = MUMBLES[Math.floor(Math.random() * MUMBLES.length)].replace('{name}', nm);
+    G.botSay = { idx: bi, text: m, until: t + 3200, quiet: true };
+  }
+  // big spoken line
   if (t < (G.botNext || 0)) return;
   if (typeof speechSynthesis !== 'undefined' && speechSynthesis.speaking) { G.botNext = t + 2500; return; }
-  G.botNext = t + 9000 + Math.random() * 6000;
-  const bot = ROOM_BOTS[bi];
+  G.botNext = t + 11000 + Math.random() * 7000;
   let line = BOT_LINES[Math.floor(Math.random() * BOT_LINES.length)];
   const here = G.room.players.filter(p => p.id !== G.myId && !p.caught && !p.isSeeker);
-  if (here.length && Math.random() < 0.35) line = line.replace(/\byou\b/i, here[Math.floor(Math.random() * here.length)].name);
+  if (here.length && Math.random() < 0.45) line = line.replace(/\byou\b/i, here[Math.floor(Math.random() * here.length)].name);
   speakBot(line, bot.pitch);
   G.botSay = { idx: bi, text: line, until: t + 5200 };
-  feed('👺 ' + bot.name + ': ' + line);
+  feed('üë∫ ' + bot.name + ': ' + line);
 }
 
 function drawMonster(x, y, t) {
@@ -1761,7 +1858,7 @@ function drawMonster(x, y, t) {
   ctx.font = 'bold 13px sans-serif';
   ctx.fillStyle = '#ff8bb0';
   ctx.fillText(G.room.monsterName || 'THE MONSTER', x, y - r - 14);
-  if (G.room.phase === 'hiding') { ctx.font = '30px serif'; ctx.fillText('😴', x, y - r - 40); }
+  if (G.room.phase === 'hiding') { ctx.font = '30px serif'; ctx.fillText('üò¥', x, y - r - 40); }
 }
 
 // ---------- HUD ----------
@@ -1772,9 +1869,10 @@ function updateHud() {
   $('hudMonster').textContent = G.room.monsterName || '';
   const phase = G.room.phase;
   let label = '';
-  if (G.ghost) label = '👻 DEAD (be annoying)';
-  else if (amSeeker()) label = phase === 'hiding' ? '🙈 COUNTING' : '🍴 FEAST';
-  else label = phase === 'hiding' ? '🏃 HIDE!!' : '🤫 DO NOT LAUGH';
+  if (G.ghost) label = 'üëª DEAD (be annoying)';
+  else if (!G.room.seekerId && (phase === 'seek' || phase === 'hiding')) label = 'üö∂ EXPLORING (no monster)';
+  else if (amSeeker()) label = phase === 'hiding' ? 'üôà COUNTING' : 'üç¥ FEAST';
+  else label = phase === 'hiding' ? 'üèÉ HIDE!!' : 'ü§´ DO NOT LAUGH';
   $('hudPhase').textContent = label;
 }
 
@@ -1805,11 +1903,11 @@ async function initMic(force) {
     micData = new Float32Array(analyser.fftSize);
     G.mic.ok = true;
     VC.stream = stream; // proximity voice uses the same mandatory mic
-    $('micLabel').textContent = '🎤';
+    $('micLabel').textContent = 'üé§';
     updateMicGate();
   } catch (e) {
     G.mic.ok = false;
-    $('micLabel').textContent = '🚫';
+    $('micLabel').textContent = 'üö´';
     updateMicGate();
   }
 }
@@ -1851,7 +1949,7 @@ function vcPeer(id, initiator) {
     if (!P.linked) {
       P.linked = true;
       const p = G.room && G.room.players.find(x => x.id === id);
-      if (p) feed(`🎙️ voice linked: ${p.name}`);
+      if (p) feed(`üéôÔ∏è voice linked: ${p.name}`);
     }
   };
   if (initiator) {
@@ -1939,8 +2037,8 @@ function micFrame() {
   G.talkLvl = rms > G.mic.base * 4 + 0.05 ? 3 : rms > G.mic.base * 3 + 0.028 ? 2 : rms > G.mic.base * 2.2 + 0.015 ? 1 : 0;
 
   const t = now();
-  if (t < G.muteUntil) { $('micLabel').textContent = '🤐'; return; }
-  $('micLabel').textContent = '🎤';
+  if (t < G.muteUntil) { $('micLabel').textContent = 'ü§ê'; return; }
+  $('micLabel').textContent = 'üé§';
   const inRound = G.room && G.room.phase === 'seek' && !G.ghost && G.screen === 'game';
   const poker = 1 + 0.15 * upLvl('poker');
   // ONLY sustained laughter matters. talking/breathing/whispering does nothing.
@@ -1953,7 +2051,7 @@ function micFrame() {
     G.mic.lastLaugh = t;
     G.mic.hot = [];
     socket.emit('laugh');
-    if (!amSeeker()) feed('😂 YOU LAUGHED. The mic heard it. It always hears it.');
+    if (!amSeeker()) feed('üòÇ YOU LAUGHED. The mic heard it. It always hears it.');
   }
 }
 
