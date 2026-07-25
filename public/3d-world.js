@@ -424,7 +424,7 @@ export function buildWorld(scene, renderer) {
   const FACE = { '+z': [0, 0, 0.06], '-z': [Math.PI, 0, -0.06], '+x': [Math.PI / 2, 0.06, 0], '-x': [-Math.PI / 2, -0.06, 0] };
   const frameM = std(0x241708, { roughness: 0.75 });
 
-  // fake AO: one shared gradient (dark at v=1), two jobs ‚Äî a contact-shadow strip lying on
+  // fake AO: one shared gradient (dark at v=1), two jobs — a contact-shadow strip lying on
   // the floor along every wall base, and a soft corner line where walls meet ceilings.
   // Same recipe as the prop blob shadows: transparent, no depth write, renderOrder 1.
   const aoTex = cv(16, 64, (g2, w2, h2) => {
@@ -661,7 +661,7 @@ export function buildWorld(scene, renderer) {
       std(0xe8c93f, { roughness: 0.6 }));
     cheese.position.set(0.55, 0.91, 0.35); cheese.castShadow = true; scene.add(cheese);
   }
-  // moon window, west wall: built later by moonWindow() with the upstairs ones ‚Äî
+  // moon window, west wall: built later by moonWindow() with the upstairs ones —
   // the ground floor joins the parallax club (call site sits after darkM exists)
   // swinging lamp (the den key light fixture)
   const lamp = new THREE.Group(); lamp.position.set(-0.7, H, -1.0);
@@ -2324,7 +2324,7 @@ export function buildWorld(scene, renderer) {
     };
   }
 
-  // ---------- THE GRAND STAIRCASE (hall ‚Üí landing) ----------
+  // ---------- THE GRAND STAIRCASE (hall → landing) ----------
   // solid flight in the hall's south-west corner: low end east (x -8.5), top west (x -12.9)
   {
     const N = 11, run = 4.4, rise = L2, sw = 1.7, cz2 = -5.85;
@@ -2384,7 +2384,7 @@ export function buildWorld(scene, renderer) {
     });
   }
 
-  // ---------- ATTIC SHELL + SERVANT STAIRS (master bedchamber ‚Üí attic) ----------
+  // ---------- ATTIC SHELL + SERVANT STAIRS (master bedchamber → attic) ----------
   // the attic hatch is in the bedroom, obviously. flight hugs the master's east wall,
   // low end south (z -10.5), top at z -13.4; you step off WEST (or north) onto the attic floor.
   floorRect(-13, -17, -4.6, -5, atticTex, 0.3, 0xffffff, 0.95, ATT); slab(-13, -17, -4.6, -5, ATT);
@@ -2420,12 +2420,12 @@ export function buildWorld(scene, renderer) {
     aguard(-4.62, -11.5, 0.07, 2.1);            // west lip, south portion (exit gap at the north end)
     aguard(-3.82, -10.42, 1.55, 0.07);          // south lip
     boxAt(0.1, 0.5, 3.1, woodM, -4.61, ATT - 0.25, -12); // fascia
-    wallSign(['ATTIC ‚Üë', 'GOOD LUCK UP THERE'], 1.0, 0.5, -3.08, L2 + 1.7, -10.6, -Math.PI / 2, {});
+    wallSign(['ATTIC ↑', 'GOOD LUCK UP THERE'], 1.0, 0.5, -3.08, L2 + 1.7, -10.6, -Math.PI / 2, {});
   }
 
   // ---------- moon windows (upper exterior walls) ----------
-  // the night outside is four stacked layers now ‚Äî stars / moon / drifting clouds /
-  // a bare tree ‚Äî whose texture offsets slide against the viewer for real parallax
+  // the night outside is four stacked layers now — stars / moon / drifting clouds /
+  // a bare tree — whose texture offsets slide against the viewer for real parallax
   const starsOnlyTex = cv(256, 256, (g, w, h) => {
     g.fillStyle = '#05070f'; g.fillRect(0, 0, w, h);
     for (let i = 0; i < 130; i++) {
@@ -2701,7 +2701,7 @@ export function buildWorld(scene, renderer) {
     // gun cabinet: empty. note flutters.
     boxAt(1.2, 2.0, 0.4, woodM, 4.35, L2 + 1.0, -9.6);
     addCollider(4.35, -9.6, 1.2, 0.4, L2 + 2.0, L2);
-    wallSign(['GONE FISHIN', '‚Äî THE GUNS'], 1.0, 0.5, 4.35, L2 + 1.3, -9.36, 0, {});
+    wallSign(['GONE FISHIN', '— THE GUNS'], 1.0, 0.5, 4.35, L2 + 1.3, -9.36, 0, {});
     speakers.push({ name: 'MOUNTED ELK', x: 5.2, y: L2 + 2.0, z: -16.8, radius: 3.4, lines: [
       'avenge me. or at least dust me.',
       'the duck saw everything.',
@@ -2753,7 +2753,7 @@ export function buildWorld(scene, renderer) {
       const dart = boxAt(0.04, 0.04, 0.3, std(0xd83a3a, { roughness: 0.5 }), dx2, dy2, -4.82);
       dart.rotation.x = 0.2;
     });
-    wallSign(['DARTS: 0 ‚Äî HOUSE: 41'], 1.3, 0.35, 4, L2 + 2.5, -4.9, 0, {});
+    wallSign(['DARTS: 0 — HOUSE: 41'], 1.3, 0.35, 4, L2 + 2.5, -4.9, 0, {});
     // card table, mid-game, everyone had aces
     cylAt(0.75, 0.75, 0.09, std(0x1c4a2c, { roughness: 0.95 }), 4.6, L2 + 0.72, 2.6, 16);
     cylAt(0.1, 0.14, 0.72, woodM, 4.6, L2 + 0.36, 2.6);
@@ -2833,7 +2833,7 @@ export function buildWorld(scene, renderer) {
     [[-0.65, -0.3], [0.65, -0.3], [-0.65, 0.3], [0.65, 0.3]].forEach(([ox, oz]) => boxAt(0.1, 0.76, 0.1, woodM, 14.8 + ox, L2 + 0.38, 3.9 + oz));
     addCollider(14.8, 3.9, 1.5, 0.8, L2 + 0.8, L2);
     boxAt(0.4, 0.01, 0.3, std(0xe8e0d0, { roughness: 0.9 }), 14.7, L2 + 0.81, 3.85, 0.3);
-    wallSign(['"IT BLINKED."', '‚Äî final entry'], 1.0, 0.5, 15.92, L2 + 1.6, 3.9, -Math.PI / 2, {});
+    wallSign(['"IT BLINKED."', '— final entry'], 1.0, 0.5, 15.92, L2 + 1.6, 3.9, -Math.PI / 2, {});
     speakers.push({ name: 'THE TELESCOPE', x: 12.5, y: L2 + 1.9, z: -1.6, radius: 3.6, lines: [
       'i looked. i regret.',
       'the moon has been making eye contact for 40 years.',

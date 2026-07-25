@@ -233,7 +233,7 @@ export function initGame({ sock, peers, P, scene, tickers, voiceCtl, camera, wor
   const camsBtn = el('<button id="sbCams" class="sbBtn sbui">CAMERAS</button>');
   const hatsBtn = el('<button id="sbHats" class="sbBtn sbui">HATS</button>');
   const toastEl = el('<div id="sbToast" class="sbui"></div>');
-  const camHud = el(`<div id="sbCamHud"><div class="lbl"></div><div class="rec">REC ‚óè</div>
+  const camHud = el(`<div id="sbCamHud"><div class="lbl"></div><div class="rec">REC ●</div>
     <div class="btns"><button id="sbCamNext">NEXT CAM</button><button id="sbCamExit">EXIT</button></div></div>`);
   const shop = el('<div id="sbShop" class="sbui"><div id="sbShopCard"><h2>THE HAT HOLE</h2><div id="sbHatList"></div><button id="sbShopClose">LEAVE THE HOLE</button></div></div>');
   [barWrap, tasksEl, roleEl, choreBtn, killBtn, reportBtn, panicBtn, startBtn, tint, deadEl, meet, over, coinsEl, miniEl,
@@ -284,7 +284,7 @@ export function initGame({ sock, peers, P, scene, tickers, voiceCtl, camera, wor
   const mapWrap = el(`<div id="sbMapWrap"><div id="sbMapCard"><h3>THE GIGGLEHOUSE</h3>
     <div id="sbMapFloors"></div>
     <canvas id="sbMapCv" width="300" height="320"></canvas>
-    <div class="leg">‚óÜ your chores &nbsp; ‚óè you &nbsp; ‚ñ≤‚ñº stairs &nbsp; (nobody else is on this map. trust no one.)</div>
+    <div class="leg">◆ your chores &nbsp; ● you &nbsp; ▲▼ stairs &nbsp; (nobody else is on this map. trust no one.)</div>
     <button id="sbMapClose">CLOSE</button></div></div>`);
   document.body.appendChild(mapBtn); document.body.appendChild(mapWrap);
   const mapCv = mapWrap.querySelector('#sbMapCv');
@@ -337,16 +337,16 @@ export function initGame({ sock, peers, P, scene, tickers, voiceCtl, camera, wor
       g.fillStyle = '#4a3820'; g.font = 'bold 8px Courier New'; g.textAlign = 'center';
       g.fillText(shortRoom(r.name), x0 + w / 2, y0 + 12);
     });
-    // stairs: ‚ñ≤ where they go up from this floor, ‚ñº where they come down onto it
+    // stairs: ▲ where they go up from this floor, ▼ where they come down onto it
     ((world && world.stairs) || []).forEach(st => {
       const cx = px((st.x0 + st.x1) / 2), cy = py((st.z0 + st.z1) / 2);
       g.font = 'bold 11px Courier New'; g.textAlign = 'center'; g.fillStyle = '#1f5a7a';
-      if (st.lo === mapFloor) g.fillText('‚ñ≤', cx, cy + 4);
-      else if (st.hi === mapFloor) g.fillText('‚ñº', cx, cy + 4);
+      if (st.lo === mapFloor) g.fillText('▲', cx, cy + 4);
+      else if (st.hi === mapFloor) g.fillText('▼', cx, cy + 4);
     });
     if (mode === 'heist' && mapFloor === 0) { // the chest is the goal
       g.fillStyle = '#7a5a08'; g.font = 'bold 8px Courier New';
-      g.fillText('‚ñ£ CHEST', px(-1.7), py(-4.0));
+      g.fillText('▣ CHEST', px(-1.7), py(-4.0));
     }
     myTasks.forEach(t => {
       if (t.done) return;
@@ -354,7 +354,7 @@ export function initGame({ sock, peers, P, scene, tickers, voiceCtl, camera, wor
       const x = px(s.x), y = py(s.z);
       g.fillStyle = '#a85a10'; g.beginPath(); g.moveTo(x, y - 5); g.lineTo(x + 5, y); g.lineTo(x, y + 5); g.lineTo(x - 5, y); g.closePath(); g.fill();
       g.fillStyle = '#7a4610'; g.font = '7px Courier New';
-      g.fillText(s.label.split(' ')[0] + (DUO_LABEL[t.id] ? '¬∑2' : ''), x, y - 7);
+      g.fillText(s.label.split(' ')[0] + (DUO_LABEL[t.id] ? '·2' : ''), x, y - 7);
     });
     const yx = px(P.x), yy = py(P.z);
     if (myFloor() === mapFloor) { // you, solidly here
@@ -384,7 +384,7 @@ export function initGame({ sock, peers, P, scene, tickers, voiceCtl, camera, wor
       const wrap2 = el(`<div style="margin-top:12px; text-align:center;">
         <div style="font-family:'Courier New',monospace; font-size:11px; letter-spacing:3px; color:#ff6a5a;">THE MURDER MAP</div>
         <canvas id="sbRecap" width="440" height="240" style="max-width:92vw; margin-top:6px;"></canvas>
-        <div style="font-family:'Courier New',monospace; font-size:8px; letter-spacing:1px; color:#8a7c62;">‚Äî the villain's route &nbsp; ‚úï where they got got &nbsp; ‚óè where it began</div>
+        <div style="font-family:'Courier New',monospace; font-size:8px; letter-spacing:1px; color:#8a7c62;">— the villain's route &nbsp; ✕ where they got got &nbsp; ● where it began</div>
       </div>`);
       const aw = over.querySelector('#sbAwards');
       if (aw && aw.parentNode) aw.parentNode.insertBefore(wrap2, aw.nextSibling);
@@ -431,9 +431,9 @@ export function initGame({ sock, peers, P, scene, tickers, voiceCtl, camera, wor
   // ---------- EMOTE WHEEL ----------
   const EMOTES = [
     { k: 'wave', label: 'WAVE', say: 'hi.' },
-    { k: 'point', label: 'POINT', say: '‚òû YOU' },
+    { k: 'point', label: 'POINT', say: '☞ YOU' },
     { k: 'accuse', label: 'ACCUSE', say: "J'ACCUSE!" },
-    { k: 'dance', label: 'DANCE', say: '‚ô™ ‚ô´ ‚ô™' },
+    { k: 'dance', label: 'DANCE', say: '♪ ♫ ♪' },
     { k: 'fart', label: 'FART', say: 'BRAAAAP' },
     { k: 'rofl', label: 'ROFL', say: 'AHAHAHA' },
   ];
@@ -572,7 +572,7 @@ export function initGame({ sock, peers, P, scene, tickers, voiceCtl, camera, wor
     window.GD3.camView = v;
     window.GD3.freeze = true;
     camHud.style.display = 'block';
-    camHud.querySelector('.lbl').textContent = 'CAM 0' + (i + 1) + ' ‚Äî ' + v.label;
+    camHud.querySelector('.lbl').textContent = 'CAM 0' + (i + 1) + ' — ' + v.label;
   }
   function exitCam() {
     camIdx = -1;
@@ -833,7 +833,7 @@ export function initGame({ sock, peers, P, scene, tickers, voiceCtl, camera, wor
     if (!myTasks.length) { tasksEl.style.display = 'none'; return; }
     const hdr = role === 'imposter' ? 'FAKE CHORES (for show)' : 'YOUR CHORES';
     tasksEl.innerHTML = `<div class="hdr">${hdr}</div>` + myTasks.map(t =>
-      `<div class="${t.done ? 'done' : ''}">¬∑ ${STATIONS[t.id].label}</div>`).join('');
+      `<div class="${t.done ? 'done' : ''}">· ${STATIONS[t.id].label}</div>`).join('');
     tasksEl.style.display = 'block';
   }
   function setBar(p, total) {
@@ -1145,7 +1145,7 @@ export function initGame({ sock, peers, P, scene, tickers, voiceCtl, camera, wor
   });
   const FART_LINES = ['SOMEBODY RIPPED ONE IN ', 'A GOD-AWFUL SMELL FROM ', 'THAT CAME FROM ', 'WHO DID THAT. IT WAS ', 'THE STENCH IS COMING FROM '];
   const BURP_LINES = ['A MONSTROUS BURP FROM ', 'SOMEONE ROARED FROM BOTH ENDS IN ', 'GOT DAYUM. A BELCH FROM '];
-  function pingRing(x, z, color, y = 0) { // a stink beacon on the floor ‚Äî reveals a location to everyone
+  function pingRing(x, z, color, y = 0) { // a stink beacon on the floor — reveals a location to everyone
     const ring = new THREE.Mesh(new THREE.TorusGeometry(0.4, 0.06, 8, 24),
       new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.9 }));
     ring.rotation.x = -Math.PI / 2; ring.position.set(x, y + 0.05, z);
@@ -1189,7 +1189,7 @@ export function initGame({ sock, peers, P, scene, tickers, voiceCtl, camera, wor
       const pool = kind === 'fart' ? FART_LINES : BURP_LINES;
       const who = id === sock.id ? 'YOU (we all know)' : nearHere;
       toast(pool[Math.floor(Math.random() * pool.length)] + who + '.', 3000);
-      // it reveals a location, like a stink beacon ‚Äî and it's contagiously funny nearby
+      // it reveals a location, like a stink beacon — and it's contagiously funny nearby
       const d = Math.hypot(P.x - x, P.z - z, P.y - (y || 0));
       if (d < 8 && !meDead && aliveIds.has(sock.id)) giggle = Math.min(1, giggle + 0.3 * (1 - d / 8));
       pingRing(x, z, kind === 'fart' ? 0x8aa83a : 0xb8a86a, y || 0);
@@ -1354,7 +1354,7 @@ export function initGame({ sock, peers, P, scene, tickers, voiceCtl, camera, wor
         mini.count = Math.max(0, mini.count - 2.2 * dt); // slack off and it drains
         const bar = miniEl.querySelector('#sbMashBar');
         const r = Math.max(0, Math.min(10, Math.round(mini.count)));
-        if (bar) bar.textContent = '‚ñà'.repeat(r) + '‚ñë'.repeat(10 - r);
+        if (bar) bar.textContent = '█'.repeat(r) + '░'.repeat(10 - r);
       } else if (mini.type === 'timing') {
         mini.cursor = Math.sin(t * 2.7);
         const cur = miniEl.querySelector('#sbTimeCur');

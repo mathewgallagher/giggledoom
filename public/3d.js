@@ -310,7 +310,7 @@ const ROOM_FOG = {
   default: [0x0a0806, 0.03],
 };
 const fogTarget = new THREE.Color();
-// per-room grade: [contrast, saturation, tint] ‚Äî subtle, the fog does the loud part
+// per-room grade: [contrast, saturation, tint] — subtle, the fog does the loud part
 const ROOM_GRADE = {
   'THE MEAT KITCHEN': [1.07, 0.88, 0xdcf2d4],   // grease-green, a little dead
   'THE NURSERY': [1.05, 0.80, 0xd8e4ff],        // cold and drained
@@ -447,7 +447,7 @@ function tick() {
     world.rooms.forEach(r => { r.fill.intensity *= 0.07; });
   }
 
-  // nearest talking thing (same floor only ‚Äî walls muffle, floors mute)
+  // nearest talking thing (same floor only — walls muffle, floors mute)
   let near = null, nd = 1e9;
   for (const sp of world.speakers) {
     const d = Math.hypot(P.x - sp.x, P.z - sp.z);

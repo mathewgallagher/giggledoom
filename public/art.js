@@ -570,12 +570,12 @@ const { artCreature, artMonster, artGhost, artProp, artBot, ART_HEAD_TOP } = (()
     g.textAlign = 'center'; g.textBaseline = 'alphabetic';
     if (o.acc) { g.font = '30px serif'; g.fillText(o.acc, 30, -36); }
     const hatY = (HEADTOP[charId] || -100) + 10;
-    if (o.hat === 'ü§†') paintCowboyHat(g, 0, hatY + 4);
+    if (o.hat === '🤠') paintCowboyHat(g, 0, hatY + 4);
     else if (o.hat) { g.font = '34px serif'; g.fillText(o.hat, 0, hatY); }
     g.restore();
   }
 
-  // the YEEHAW hat, painted (the emoji version is a whole second face ‚Äî no)
+  // the YEEHAW hat, painted (the emoji version is a whole second face — no)
   function paintCowboyHat(g, x, y) {
     const bg = g.createLinearGradient(x, y - 20, x, y + 4);
     bg.addColorStop(0, '#9a6a3c'); bg.addColorStop(1, '#5e3a1c');

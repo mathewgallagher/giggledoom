@@ -58,7 +58,7 @@ export function initNet({ scene, tickers, P, camera, colliders }) {
   wrap.innerHTML = `
     <div id="gdCard">
       <h1>THE GIGGLEHOUSE</h1>
-      <div class="sub">3D BETA ¬∑ WALK IT TOGETHER</div>
+      <div class="sub">3D BETA · WALK IT TOGETHER</div>
       <label>YOUR NAME</label>
       <input id="gdName" maxlength="14" placeholder="WET NUGGET">
       <label>PICK YOUR IDIOT</label>

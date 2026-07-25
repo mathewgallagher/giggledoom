@@ -443,7 +443,7 @@ export function buildPlayerRig(char) {
       }
     });
   }
-  // eyebrows: the whole personality in one angled box per eye (refs kept ‚Äî the face reacts now)
+  // eyebrows: the whole personality in one angled box per eye (refs kept — the face reacts now)
   const browAngle = { zoomy: -0.18, slurp: 0.35, gremlin: -0.45, wallfish: 0 }[char] || 0;
   R.brows = [];
   R.eyes.forEach((eye, i) => {
@@ -603,7 +603,7 @@ export function attachHat(R, id) {
   R.hatMesh = h;
 }
 
-// ---------- WALKING MONSTER (MONSTER WAKES mode) ‚Äî upright, striding, furious ----------
+// ---------- WALKING MONSTER (MONSTER WAKES mode) — upright, striding, furious ----------
 export function buildWalkMonster() {
   const g = new THREE.Group();
   const fur = std(0x342238, { roughness: 0.95 });
